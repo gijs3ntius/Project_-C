@@ -70,7 +70,7 @@ int digital_read(int pin) {
 /*
  * Configures an ADC pin
  */
-void adc_config() {
+void analog_config() {
 	ADMUX |= _BV(REFS0); //Set reference voltage (see docs)
 	ADCSRA |= _BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0); // Set the prescaler
 	ADCSRA |= _BV(ADEN); // Enable ADC
@@ -81,7 +81,7 @@ void adc_config() {
  * https://gist.github.com/Wollw/2396604 code from Internet to read analog
  * TODO before reading setup the ADMUX and ADCSRA registers
  */
-uint16_t adc_read(uint8_t adcx) {
+uint16_t analog_read(uint8_t adcx) {
 	/* adcx is the analog pin we want to use.  ADMUX's first few bits are
 	 * the binary representations of the numbers of the pins so we can
 	 * just 'OR' the pin's number with ADMUX to select that pin.
