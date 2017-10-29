@@ -5,3 +5,5 @@ BesturingsEenheid.cproj
 .vs/*
 *.xml
 *.cproj
+*.cppproj
+BesturingsEenheid.cppproj
