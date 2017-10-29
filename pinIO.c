@@ -56,19 +56,19 @@ void digital_write(int pin, int value) {
 }
 
 /*
- * Gets a value from a digital pin
+ * Gets a value from a digital pin 1 or 0
  */
 int digital_read(int pin) {
 	if (pin < 8)
 	{
-		return (PINB & (1 << (pin%8)));
+		return (PIND & (1 << (pin%8)));
 	} else {
 		return (PINB & (1 << (pin%8)));
 	}
 }
 
 /*
- * Configures an ADC pin
+ * Configures an ADC pin in this case pin 0
  */
 void analog_config() {
 	ADMUX |= _BV(REFS0); //Set reference voltage (see docs)
