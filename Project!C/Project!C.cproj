@@ -121,6 +121,27 @@
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Photocell_light.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="pinIO.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="pinIO.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="serialConnection.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="serialConnection.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Temperature.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Ultrasenoorsensor.c">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

@@ -26,23 +26,6 @@ int getLight(){
 }
 
 
-
-
 /* bovenstaande code is alles wat je nodig hebt om de photoresistor uit te lezen.
 * Vervolgens moeten we kijken of we in de centrale iets met de gelezen waarden te doen, of op de Arduino
 */
-
-void doSomething(){
-	float value = read_Analog(1); // lees A1 uit, een waarde tussen 0 en 1023
-	
-	if (value < 512)
-	{
-		rollUit(); // voorbeeld: weerstand is laag, dus veel licht. Lage waarde = veel licht.
-	} 
-	if (value > 512)
-	{
-		rollIn(); // voorbeeld: weerstand is hoog, dus weinig licht. Hoge waarde = donker.
-	}
-	
-}
-
