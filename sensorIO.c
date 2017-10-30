@@ -85,7 +85,6 @@ float temperatureInC(voltage){
 float measure_Temp(){
 	float tempInC = temperatureInC(voltage(analog_read(0))); // lees ADC uit (A0) en maak er volt van en dan Celsius
 	return tempInC;
-
 }
 
 
