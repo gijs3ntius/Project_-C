@@ -8,7 +8,7 @@
 #include <avr/io.h>
 
 /************************************************************************/
-/* Struct that defines an arduino interface (maybe not even necessary)                                                                    */
+/* Struct that defines an arduino interface                                                                 */
 /************************************************************************/
 
 struct arduino  
@@ -74,5 +74,13 @@ int command() {
 /************************************************************************/
 
 int readSensor() {
+	
+}
+
+/************************************************************************/
+/* Functions to read data from the serial connection                    */
+/************************************************************************/
+
+int readSerial() {
 	
 }
