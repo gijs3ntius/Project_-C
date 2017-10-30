@@ -10,8 +10,8 @@
  * bron: http://howtomechatronics.com/tutorials/arduino/ultrasonic-sensor-hc-sr04/
  */ 
 
-// # include library PIN uitlezen
-// # include library voor Rx Tx verbinding etc...
+#include "pinIO.h"
+#include "serialConnection.h"
 
 const int trigPin = 9;
 const int echoPin = 10;
@@ -20,23 +20,22 @@ long duration;
 int distance;
 
 void setUp(){
-	// trigPin = OUTPUT;
-	// echoPin = INPUT;
-	
+	trigPin = digital_config(9, OUT); // trigger pin wordt output
+	echoPin = digital_config(10, IN); // echo pin is input
 }
 
 void startPulse(){
-	trigPin = LOW; // zorg ervoor dat trigger leeg is!
-	delay(2ms);
+	trigPin = digital_write(LOW); // zorg ervoor dat trigger leeg is!
+	_delay_ms(2);
 	
-	trigPin = HIGH;
-	delay(10ms);
-	trigPin = LOW;
+	trigPin = digital_write(HIGH);
+	_delay_ms(10);
+	trigPin = digital_write(LOW);
 	
 }
 
 long readPulse(){
-	duration = read echoPin;
+	duration = digital_read(echoPin);
 	return duration;
 }
 
@@ -52,7 +51,7 @@ int getDistance(){
 	setUp();
 	
 	startPulse();
-	distance(readPulse());
+	distance = distance(readPulse());
 	
 	return distance;
 	
