@@ -18,7 +18,7 @@ const int light;
 
 
 int getLight(){
-	light = read_Analog(1); // lees A1 uit // deze functie nog uit Gijs zijn library halen
+	light = analog_read(1); // lees A1 uit // deze functie nog uit Gijs zijn library halen
 	return light;
 }
 
