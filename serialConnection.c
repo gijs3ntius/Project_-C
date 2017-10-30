@@ -6,9 +6,11 @@
  */ 
 
 #include <avr/io.h>
+#include <stdlib.h>
+#include <avr/sfr_defs.h>
 
 /************************************************************************/
-/* Struct that defines an arduino interface                                                                 */
+/* Struct that defines an arduino interface                             */
 /************************************************************************/
 
 struct arduino  
@@ -65,22 +67,37 @@ int sentData() {
 /* Functions for the commands and the handling of the commands          */
 /************************************************************************/
 
-int command() {
-	
-}
-
-/************************************************************************/
-/* Functions to get data from sensors                                   */
-/************************************************************************/
-
-int readSensor() {
-	
+// first 3 bits are the command
+int getCommand(uint8_t input) {
+	int number = input & 0xE0; // mask the last 3 bits these are
+	switch (number)
+	{
+		case 0x00: return 1;
+		case 0x20: return 2;
+		case 0x40: return 3;
+		case 0x60: return 4;
+		case 0x80: return 5;
+		case 0xA0: return 6;
+		case 0xC0: return 7;
+		case 0xE0: return 8;
+	}
 }
 
 /************************************************************************/
 /* Functions to read data from the serial connection                    */
 /************************************************************************/
 
-int readSerial() {
-	
+uint8_t receiveSerial() {
+	// wait for data to be received
+	while ( !(UCSR0A & (1 << RXC0)) );
+	// get and return received data from buffer
+	return UDR0;
+}
+
+void transmitSerial(uint8_t data) {
+	// wait for an empty transmit buffer
+	// UDRE is set when the transmit buffer is empty
+	loop_until_bit_is_set(UCSR0A, UDRE0);
+	// send the data
+	UDR0 = data;
 }
