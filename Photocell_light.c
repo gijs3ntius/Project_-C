@@ -11,11 +11,8 @@
 
 // # include temperature voor voltage functie
 
-#include <avr/io.h>
-#include <stdlib.h>
-#include <avr/sfr_defs.h>
-#define F_CPU 16E6
 #include <util/delay.h>
+#include "pinIO.h"
 
 const int light;
 

@@ -10,13 +10,7 @@
  */ 
 
 
-#include <avr/io.h> 
-#include <stdlib.h> 
-#include <avr/sfr_defs.h> 
-#define F_CPU 16E6 
-#include <util/delay.h> 
 #include "pinIO.h"
-#include "serialConnection.h"
 
 
 /* verander het 10 bits getal in het voltage */
