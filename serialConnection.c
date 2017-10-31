@@ -8,6 +8,7 @@
 #include <avr/io.h>
 #include <stdlib.h>
 #include <avr/sfr_defs.h>
+#define UBBRVAL 51
 
 /************************************************************************/
 /* Struct that defines an arduino interface                             */
@@ -86,6 +87,18 @@ int getCommand(uint8_t input) {
 /************************************************************************/
 /* Functions to read data from the serial connection                    */
 /************************************************************************/
+
+void initSerial() {
+	// set the baud rate
+	UBRR0H = 0;
+	UBRR0L = UBBRVAL;
+	// disable U2X mode
+	UCSR0A = 0;
+	// enable receiver en transmitter
+	UCSR0B = (1<<TXEN0) | (1<<RXEN0);
+	// set frame format : asynchronous, 8 data bits, 1 stop bit, no parity
+	UCSR0C = _BV(UCSZ01) | _BV(UCSZ00);
+}
 
 uint8_t receiveSerial() {
 	// wait for data to be received
