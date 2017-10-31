@@ -68,19 +68,20 @@ int sentData() {
 /* Functions for the commands and the handling of the commands          */
 /************************************************************************/
 
-// first 3 bits are the command
+// first 3 bits are the command, 
+// first frame received is the command frame
 int getCommand(uint8_t input) {
-	int number = input & 0xE0; // mask the last 3 bits these are
+	int number = input & 0x07; // mask the last 3 bits these are
 	switch (number)
 	{
 		case 0x00: return 1;
-		case 0x20: return 2;
-		case 0x40: return 3;
-		case 0x60: return 4;
-		case 0x80: return 5;
-		case 0xA0: return 6;
-		case 0xC0: return 7;
-		case 0xE0: return 8;
+		case 0x01: return 2;
+		case 0x02: return 3;
+		case 0x03: return 4;
+		case 0x04: return 5;
+		case 0x05: return 6;
+		case 0x06: return 7;
+		case 0x07: return 8;
 	}
 }
 
