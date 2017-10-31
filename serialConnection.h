@@ -6,7 +6,7 @@
  */ 
 
 int isValidID(int number);
-int connect(int ID* ,int number);
+int connect(int ID*, int number);
 int getConnected(int ID*);
 int getData();
 int sentData();
