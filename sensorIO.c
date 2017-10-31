@@ -13,28 +13,28 @@
 #include "pinIO.h"
 #include <util/delay.h>
 
-const int trigPin = 9;
-const int echoPin = 10;
+const int trigPin = 9; // const
+const int echoPin = 10; // const
 
-const int light;
+int light; // const
 
 long duration;
-int distance;
+int dis;
 
 
 /* Ultrasenoorsensor */
 void setUpUltra(){
-	trigPin = digital_config(9, OUT); // trigger pin wordt output
-	echoPin = digital_config(10, IN); // echo pin is input
+	digital_config(trigPin, OUT); // trigger pin wordt output
+	digital_config(echoPin, IN); // echo pin is input
 }
 
 void startPulse(){
-	trigPin = digital_write(LOW); // zorg ervoor dat trigger leeg is!
+	digital_write(trigPin, LOW); // zorg ervoor dat trigger leeg is!
 	_delay_ms(2);
 	
-	trigPin = digital_write(HIGH);
+	digital_write(trigPin, HIGH);
 	_delay_ms(10);
-	trigPin = digital_write(LOW);
+	digital_write(trigPin, LOW);
 	
 }
 
@@ -44,8 +44,8 @@ long readPulse(){
 }
 
 int distance(duration){
-	distance = (duration * 0.034) / 2;
-	return distance;
+	dis = (duration * 0.034) / 2;
+	return dis;
 }
 
 
@@ -55,7 +55,7 @@ int getDistance(){
 	setUpUltra();
 	
 	startPulse();
-	distance = distance(readPulse());
+	dis = distance(readPulse());
 	
 	return distance;
 	
@@ -88,16 +88,16 @@ float measure_Temp(){
 }
 
 
-int getTemp() {
+uint8_t getTemp() {
 	int temperature;
-	temperature= measure_Temp(); // roep de functie aan die temperatuur uitleest
+	temperature = measure_Temp(); // roep de functie aan die temperatuur uitleest
 	return temperature;
 }
 
 
 /* Photocell sensor */
-int getLight(){
-	light = analog_read(1); // lees A1 uit // deze functie nog uit Gijs zijn library halen
+uint8_t getLight(){
+	light = analog_read(1); // lees A1 uit 
 	return light;
 }
 

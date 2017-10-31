@@ -6,81 +6,111 @@
  */ 
 
 #include <avr/io.h>
+#include <stdlib.h>
+#include <avr/sfr_defs.h>
+#define UBBRVAL 51
 
 /************************************************************************/
-/* Struct that defines an arduino interface                                                                 */
+/* Struct that defines an arduino interface                             */
 /************************************************************************/
 
-struct arduino  
-{
-	int ID;
-} besturings_eenheid;
+//struct arduino  
+//{
+//	int ID;
+//} besturings_eenheid;
 
 /************************************************************************/
 /* Functions to set and get a connection                                */
 /************************************************************************/
 
 // Function to check if a given number is valid as an ID
-int isValidID(int number) {
+//int isValidID(int number) {
 	// TODO what else need to be checked
-	if (number <= 0) // number needs to be bigger then 0
-	{
-		return 0;
-	}
-	return 1; // number is valid
-}
+//	if (number <= 0) // number needs to be bigger then 0
+//	{
+//		return 0;
+//	}
+//	return 1; // number is valid
+//}
 
 // Connect function sets ID of an arduino interface
 // Needs to pass an pointer to an ID of an arduino interface and an number to set the id
 // Pointer is used, because this function is called within an arduino interface
-int connect(int ID* ,int number) {
-	if (ID != NULL && isValidID(number)) // check if the number is valid and the ID is not null
-	{
-		*ID = number;
-		return 1;
-	} else {
-		return 0;
-	}
-}
+//int connect(int ID* ,int number) {
+//	if (ID != NULL && isValidID(number)) // check if the number is valid and the ID is not null
+//	{
+//		*ID = number;
+//		return 1;
+//	} else {
+//		return 0;
+//	}
+//}
 
-int getConnected(int ID*) {
-	
-}
+//int getConnected(int ID*) {
+//	
+//}
 
 /************************************************************************/
 /* Functions to get data from the arduino                               */
 /************************************************************************/
 
 // Get data from arduino
-int getData() {
+//int getData() {
 	
-}
+//}
 
 // sent data from arduino via serial
-int sentData() {
+//int sentData() {
 	
-}
+//}
 
 /************************************************************************/
 /* Functions for the commands and the handling of the commands          */
 /************************************************************************/
 
-int command() {
-	
-}
-
-/************************************************************************/
-/* Functions to get data from sensors                                   */
-/************************************************************************/
-
-int readSensor() {
-	
+// first 3 bits are the command
+int getCommand(uint8_t input) {
+	int number = input & 0xE0; // mask the last 3 bits these are
+	switch (number)
+	{
+		case 0x00: return 1;
+		case 0x20: return 2;
+		case 0x40: return 3;
+		case 0x60: return 4;
+		case 0x80: return 5;
+		case 0xA0: return 6;
+		case 0xC0: return 7;
+		case 0xE0: return 8;
+	}
 }
 
 /************************************************************************/
 /* Functions to read data from the serial connection                    */
 /************************************************************************/
 
-int readSerial() {
-	
+void initSerial() {
+	// set the baud rate
+	UBRR0H = 0;
+	UBRR0L = UBBRVAL;
+	// disable U2X mode
+	UCSR0A = 0;
+	// enable receiver en transmitter
+	UCSR0B = (1<<TXEN0) | (1<<RXEN0);
+	// set frame format : asynchronous, 8 data bits, 1 stop bit, no parity
+	UCSR0C = _BV(UCSZ01) | _BV(UCSZ00);
+}
+
+uint8_t receiveSerial() {
+	// wait for data to be received
+	while ( !(UCSR0A & (1 << RXC0)) );
+	// get and return received data from buffer
+	return UDR0;
+}
+
+void transmitSerial(uint8_t data) {
+	// wait for an empty transmit buffer
+	// UDRE is set when the transmit buffer is empty
+	loop_until_bit_is_set(UCSR0A, UDRE0);
+	// send the data
+	UDR0 = data;
 }
