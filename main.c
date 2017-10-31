@@ -8,33 +8,33 @@
 #include "sensorIO.h"
 #include "serialConnection.h"
 #include "AVR_TTC_scheduler.h"
+#include "pinIO.h"
 
 
 void Light(){
-	transmitSerial(getLight); // wel of geen ()????
+	transmitSerial(getLight()); // wel of geen ()????
 }
 
 void Temperature(){
-	transmitSerial(getTemp);
+	transmitSerial(getTemp());
 }
 
 void Distance(){
-	
-	transmitSerial(getDistance);
-	
+	transmitSerial(getDistance());
 }
 
 
-/*
-int meeeain(void)
+int main(void)
 {
+	
+	adc_config();
 	initSerial();
 	
 	SCH_Init_T1(); // stel de scheduler in
 
 	//SCH_Add_Task(Light, 0, 30);// Voeg taken toe aan de scheduler Light zit op A1.
-	//SCH_Add_Task(Temperature, 0, 30);
-	SCH_Add_Task(Distance, 0, 30); 
+	SCH_Add_Task(Temperature, 0, 30);
+	//SCH_Add_Task(Distance, 0, 30); 
 
 
 	SCH_Start();// start de scheduler
@@ -43,18 +43,9 @@ int meeeain(void)
     {
 		SCH_Dispatch_Tasks(); // verzend de taken
 	}
-} */
+} 
 
 
 
-int main(void){
-	
-	initSerial();
-	
-	while(1){
-		transmitSerial(getDistance());
-	}
-	
-	
-}
+
 

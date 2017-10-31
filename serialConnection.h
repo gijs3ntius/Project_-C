@@ -5,12 +5,12 @@
  *  Author: Gijs
  */ 
 
-//int isValidID(int number);
-//int connect(int ID*, int number);
-//int getConnected(int ID*);
-//int getData();
-//int sentData();
-//int readSensor();
-//int command();
+int isValidID(int number);
+int connect(int ID*, int number);
+int getConnected(int ID*);
+int getData();
+int sentData();
+int readSensor();
+int command();
 void transmitSerial(uint8_t data);
 uint8_t receiveSerial();
