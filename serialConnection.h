@@ -12,3 +12,5 @@ int getData();
 int sentData();
 int readSensor();
 int command();
+void transmitSerial(uint8_t data);
+uint8_t receiveSerial();
