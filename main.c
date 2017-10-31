@@ -1,18 +1,51 @@
 /*
  * project_arduino.c
+ * 19200 baudrate 
  *
- * Created: 29-10-2017 10:45:52
- * Author : Gijs
  */ 
 
 #include <avr/io.h>
+#include "sensorIO.h"
+#include "serialConnection.h"
+#include "AVR_TTC_scheduler.h"
+#include "pinIO.h"
+
+
+void Light(){
+	transmitSerial(getLight()); // wel of geen ()????
+}
+
+void Temperature(){
+	transmitSerial(getTemp());
+}
+
+void Distance(){
+	transmitSerial(getDistance());
+}
 
 
 int main(void)
 {
-    /* Replace with your application code */
+	
+	adc_config();
+	initSerial();
+	
+	SCH_Init_T1(); // stel de scheduler in
+
+	//SCH_Add_Task(Light, 0, 30);// Voeg taken toe aan de scheduler Light zit op A1.
+	SCH_Add_Task(Temperature, 0, 30);
+	//SCH_Add_Task(Distance, 0, 30); 
+
+
+	SCH_Start();// start de scheduler
+   
     while (1) 
     {
-    }
-}
+		SCH_Dispatch_Tasks(); // verzend de taken
+	}
+} 
+
+
+
+
 
