@@ -45,18 +45,18 @@ long readPulse(){
 	return duration;
 }
 
-int distance(duration){
-	dis = (duration * 0.034) / 2;
+int distance(int duration_){
+	dis = (duration_ * 0.034) / 2;
 	return dis;
 }
 
 
 /* dit is een soort van de main functie. Hierdoor krijg je de juiste afstand terug. Dit in scheduler gooien */
 int getDistance(){
-	
+	int actDis;
 	startPulse();
-	dis = readPulse();
-	dis = distance(dis);
+	actDis = readPulse();
+	dis = distance(actDis);
 	
 	return dis;
 	
@@ -67,7 +67,7 @@ int getDistance(){
 ***************************************************************************************************************/
 
 
-float voltage(uint16_t analog){
+float voltage(uint8_t analog){
 	float volt = analog * 5.0 / 1024;
 	// keer 5.0 omdat het om 5 volt gaat en gedeelt door 1024 omdat het een 10 bits getal is
 	// voorbeeld: 2.5 volt = 512 * 5.0 / 1024. Je krijgt 512(0x200) binnen
