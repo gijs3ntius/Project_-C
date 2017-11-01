@@ -41,7 +41,7 @@ void startPulse(){
 }
 
 long readPulse(){
-	duration = digital_read(echoPin);
+	duration = digital_read(echoPin); // pulse in maakt gebruik van timer, zelf een timer gebruiken om dit te regelen.
 	return duration;
 }
 
@@ -103,8 +103,8 @@ float getTemp() {
 *********************************************************************************************************************/
 
 
-uint8_t getLight(){
-	light = analog_read(1); // lees A1 uit 
+uint16_t getLight(){
+	light = analog_read(0); // lees A0 uit 
 	return light;
 }
 
