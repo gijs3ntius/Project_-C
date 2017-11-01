@@ -22,7 +22,9 @@ long duration;
 int dis;
 
 
-/* Ultrasenoorsensor */
+/* Ultrasenoorsensor 
+*********************************************************************************************************************/
+
 void setUpUltra(){
 	digital_config(trigPin, OUT); // trigger pin wordt output
 	digital_config(echoPin, IN); // echo pin is input
@@ -52,29 +54,31 @@ int distance(duration){
 /* dit is een soort van de main functie. Hierdoor krijg je de juiste afstand terug. Dit in scheduler gooien */
 int getDistance(){
 	
-	setUpUltra();
-	
 	startPulse();
-	dis = distance(readPulse());
+	dis = readPulse();
+	dis = distance(dis);
 	
-	return distance;
+	return dis;
 	
 }
 
 /* Temperatuursensor
-* verander het 10 bits getal in het voltage */
-float voltage(analog){
-	float voltage = analog * 5.0 / 1024;
+* verander het 10 bits getal in het voltage 
+***************************************************************************************************************/
+
+
+float voltage(uint16_t analog){
+	float volt = analog * 5.0 / 1024;
 	// keer 5.0 omdat het om 5 volt gaat en gedeelt door 1024 omdat het een 10 bits getal is
 	// voorbeeld: 2.5 volt = 512 * 5.0 / 1024. Je krijgt 512(0x200) binnen
-	return voltage;
+	return volt;
 	
 }
 
 
 /* Deze functie zorgt ervoor dat de gemeten voltage omgezet wordt naar temperatuur */
-float temperatureInC(voltage){
-	float temperatureC = (voltage - 0.5) * 100;
+float temperatureInC(float voltage_){
+	float temperatureC = (voltage_ - 0.5) * 100;
 	// de formule die ervoor zorgt dat het omgezet wordt.
 	// voorbeeld: (1.2 - 0.5) * 100 = 70 graden Celsius.
 	return temperatureC;
@@ -88,14 +92,17 @@ float measure_Temp(){
 }
 
 
-uint8_t getTemp() {
-	int temperature;
+float getTemp() {
+	float temperature;
 	temperature = measure_Temp(); // roep de functie aan die temperatuur uitleest
 	return temperature;
 }
 
 
-/* Photocell sensor */
+/* Photocell sensor 
+*********************************************************************************************************************/
+
+
 uint8_t getLight(){
 	light = analog_read(1); // lees A1 uit 
 	return light;

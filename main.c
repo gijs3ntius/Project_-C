@@ -10,9 +10,12 @@
 #include "AVR_TTC_scheduler.h"
 #include "pinIO.h"
 
+int max_rollout;
+int min_rollout;
+
 
 void Light(){
-	transmitSerial(getLight()); // wel of geen ()????
+	transmitSerial(getLight()); 
 }
 
 void Temperature(){
@@ -24,17 +27,19 @@ void Distance(){
 }
 
 
+
 int main(void)
 {
 	
-	adc_config();
+	analog_config();
+	setUpUltra();
 	initSerial();
 	
 	SCH_Init_T1(); // stel de scheduler in
 
-	//SCH_Add_Task(Light, 0, 30);// Voeg taken toe aan de scheduler Light zit op A1.
-	SCH_Add_Task(Temperature, 0, 30);
-	//SCH_Add_Task(Distance, 0, 30); 
+	//SCH_Add_Task(Light, 0, 100); // Voeg taken toe aan de scheduler Light zit op A1.
+	SCH_Add_Task(Temperature, 0, 100); // temp zit op A0.
+	//SCH_Add_Task(Distance, 0, 100); 
 
 
 	SCH_Start();// start de scheduler
