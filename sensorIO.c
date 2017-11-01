@@ -16,7 +16,6 @@
 const int trigPin = 9; // const
 const int echoPin = 10; // const
 
-int light; // const
 
 long duration;
 int dis;
@@ -35,14 +34,17 @@ void startPulse(){
 	_delay_ms(2);
 	
 	digital_write(trigPin, HIGH);
-	_delay_ms(10);
+	_delay_us(10);
 	digital_write(trigPin, LOW);
 	
 }
 
 long readPulse(){
 	duration = digital_read(echoPin); // pulse in maakt gebruik van timer, zelf een timer gebruiken om dit te regelen.
-	return duration;
+	return duration; // eeprom gebruiken for ID bijhouden Settings op je Arduino bijhouden
+	// ardiuno moet zonder centrale door kunnen werken. Ardiuno 1 is voor zonnescherm 2. Ardiuno 2 is voor zonnescherm 2. 
+	//Informatie weergeven in python, instellingen erin zetten, handmatig scherm omhoog of omlaag doen(vanuit centrale).
+	// elke ardiuno is een klasse in centrale python.
 }
 
 int distance(int duration_){
@@ -67,7 +69,7 @@ int getDistance(){
 ***************************************************************************************************************/
 
 
-float voltage(uint8_t analog){
+float voltage(uint16_t analog){
 	float volt = analog * 5.0 / 1024;
 	// keer 5.0 omdat het om 5 volt gaat en gedeelt door 1024 omdat het een 10 bits getal is
 	// voorbeeld: 2.5 volt = 512 * 5.0 / 1024. Je krijgt 512(0x200) binnen
@@ -92,8 +94,8 @@ float measure_Temp(){
 }
 
 
-float getTemp() {
-	float temperature;
+uint8_t getTemp() {
+	uint8_t temperature;
 	temperature = measure_Temp(); // roep de functie aan die temperatuur uitleest
 	return temperature;
 }
@@ -103,8 +105,10 @@ float getTemp() {
 *********************************************************************************************************************/
 
 
-uint16_t getLight(){
-	light = analog_read(0); // lees A0 uit 
+uint8_t getLight(){
+	uint8_t light = (analog_read(0)>>2); // lees A1 uit, met een shift /4 
+	//
+	
 	return light;
 }
 
