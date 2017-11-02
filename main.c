@@ -14,10 +14,6 @@
 #include <util/delay.h>
 #include <avr/eeprom.h>
 
-int max_rollout;
-int min_rollout;
-
-
 void Light(){
 	transmitSerial(getLight()); 
 }

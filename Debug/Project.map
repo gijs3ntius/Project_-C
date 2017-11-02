@@ -41,8 +41,6 @@ Allocating common symbols
 Common symbol       size              file
 
 SCH_tasks_G         0x23              AVR_TTC_scheduler.o
-max_rollout         0x2               main.o
-min_rollout         0x2               main.o
 duration            0x4               sensorIO.o
 dis                 0x2               sensorIO.o
 
@@ -58,7 +56,6 @@ Discarded input sections
  .bss           0x00000000        0x0 main.o
  .text.Distance
                 0x00000000        0xa main.o
- COMMON         0x00000000        0x4 main.o
  .text          0x00000000        0x0 pinIO.o
  .data          0x00000000        0x0 pinIO.o
  .bss           0x00000000        0x0 pinIO.o
@@ -645,23 +642,23 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x1157
+.debug_info     0x00000000     0x1133
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x5f4 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_info    0x000005f4      0x259 AVR_TTC_scheduler.o
- .debug_info    0x0000084d      0x255 main.o
- .debug_info    0x00000aa2      0x15e pinIO.o
- .debug_info    0x00000c00      0x450 sensorIO.o
- .debug_info    0x00001050      0x107 serialConnection.o
+ .debug_info    0x0000084d      0x231 main.o
+ .debug_info    0x00000a7e      0x15e pinIO.o
+ .debug_info    0x00000bdc      0x450 sensorIO.o
+ .debug_info    0x0000102c      0x107 serialConnection.o
 
-.debug_abbrev   0x00000000      0xb22
+.debug_abbrev   0x00000000      0xb11
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x5a2 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_abbrev  0x000005a2      0x181 AVR_TTC_scheduler.o
- .debug_abbrev  0x00000723       0xc2 main.o
- .debug_abbrev  0x000007e5       0xbd pinIO.o
- .debug_abbrev  0x000008a2      0x1b8 sensorIO.o
- .debug_abbrev  0x00000a5a       0xc8 serialConnection.o
+ .debug_abbrev  0x00000723       0xb1 main.o
+ .debug_abbrev  0x000007d4       0xbd pinIO.o
+ .debug_abbrev  0x00000891      0x1b8 sensorIO.o
+ .debug_abbrev  0x00000a49       0xc8 serialConnection.o
 
 .debug_line     0x00000000      0x93e
  *(.debug_line .debug_line.* .debug_line_end)
@@ -680,18 +677,18 @@ END GROUP
  .debug_frame   0x00000198       0x94 sensorIO.o
  .debug_frame   0x0000022c       0x54 serialConnection.o
 
-.debug_str      0x00000000      0x613
+.debug_str      0x00000000      0x5fb
  *(.debug_str)
  .debug_str     0x00000000      0x208 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_str     0x00000208      0x203 AVR_TTC_scheduler.o
                                 0x237 (size before relaxing)
- .debug_str     0x0000040b       0x7a main.o
-                                0x217 (size before relaxing)
- .debug_str     0x00000485       0x52 pinIO.o
+ .debug_str     0x0000040b       0x62 main.o
+                                0x1ff (size before relaxing)
+ .debug_str     0x0000046d       0x52 pinIO.o
                                 0x1c9 (size before relaxing)
- .debug_str     0x000004d7       0xf9 sensorIO.o
+ .debug_str     0x000004bf       0xf9 sensorIO.o
                                 0x2b5 (size before relaxing)
- .debug_str     0x000005d0       0x43 serialConnection.o
+ .debug_str     0x000005b8       0x43 serialConnection.o
                                 0x1c1 (size before relaxing)
 
 .debug_loc      0x00000000      0x711
