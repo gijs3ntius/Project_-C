@@ -54,8 +54,8 @@ int distance(int duration_){
 
 
 /* dit is een soort van de main functie. Hierdoor krijg je de juiste afstand terug. Dit in scheduler gooien */
-int getDistance(){
-	int actDis;
+uint8_t getDistance(){
+	uint8_t actDis;
 	startPulse();
 	actDis = readPulse();
 	dis = distance(actDis);
@@ -68,19 +68,12 @@ int getDistance(){
 * verander het 10 bits getal in het voltage 
 ***************************************************************************************************************/
 
-
-float voltage(uint16_t analog){
+/* Deze functie zorgt ervoor dat de gemeten voltage omgezet wordt naar temperatuur */
+float temperatureInC(uint16_t analog){
 	float volt = analog * 5.0 / 1024;
 	// keer 5.0 omdat het om 5 volt gaat en gedeelt door 1024 omdat het een 10 bits getal is
 	// voorbeeld: 2.5 volt = 512 * 5.0 / 1024. Je krijgt 512(0x200) binnen
-	return volt;
-	
-}
-
-
-/* Deze functie zorgt ervoor dat de gemeten voltage omgezet wordt naar temperatuur */
-float temperatureInC(float voltage_){
-	float temperatureC = (voltage_ - 0.5) * 100;
+	float temperatureC = (volt - 0.5) * 100;
 	// de formule die ervoor zorgt dat het omgezet wordt.
 	// voorbeeld: (1.2 - 0.5) * 100 = 70 graden Celsius.
 	return temperatureC;
@@ -88,16 +81,9 @@ float temperatureInC(float voltage_){
 }
 
 
-float measure_Temp(){
-	float tempInC = temperatureInC(voltage(analog_read(0))); // lees ADC uit (A0) en maak er volt van en dan Celsius
+uint8_t getTemp(){
+	uint8_t tempInC = temperatureInC(analog_read(0)); // lees ADC uit (A0) en maak er volt van en dan Celsius
 	return tempInC;
-}
-
-
-uint8_t getTemp() {
-	uint8_t temperature;
-	temperature = measure_Temp(); // roep de functie aan die temperatuur uitleest
-	return temperature;
 }
 
 
@@ -106,8 +92,10 @@ uint8_t getTemp() {
 
 
 uint8_t getLight(){
-	uint8_t light = (analog_read(0)>>2); // lees A1 uit, met een shift /4 
-	//
+	uint8_t light = (analog_read(1)>>2); 
+	// lees A1 uit, met een shift /4 
+	// Je krijgt een 10 bits getal. We schuiven hem twee keer naar rechts zodat je 8 bits hebt.
+	// Je verliest hier alleen de waarden 0-3 mee. Voor dit project niet erg.
 	
 	return light;
 }

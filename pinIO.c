@@ -89,7 +89,6 @@ void analog_config() {
 
 /*
  * Gets a value from an analog pin
- * http://maxembedded.com/2011/06/the-adc-of-the-avr/ code from Internet to read analog
  * TODO before reading setup the ADMUX and ADCSRA registers
  */
 uint16_t analog_read(uint8_t adcPoort) {
