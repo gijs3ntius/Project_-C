@@ -29,15 +29,18 @@ class AppGUI(Frame): #using Frame from the tkinter library
         # checkboxes
         # checkboxes are bound to the button object as the checked property
         button1.checked = IntVar()
-        Checkbutton(master, variable=button1.checked).grid(row=0, sticky=E, padx=10)
+        Checkbutton(master, variable=button1.checked, command= lambda: self.cb(button1) ).grid(row=0, sticky=E, padx=10)
         button2.checked = IntVar()
-        Checkbutton(master, variable=button2.checked).grid(row=1, sticky=E, padx=10)
+        Checkbutton(master, variable=button2.checked, command= lambda: self.cb(button2) ).grid(row=1, sticky=E, padx=10)
         button3.checked = IntVar()
-        Checkbutton(master, variable=button3.checked).grid(row=2, sticky=E, padx=10)
+        Checkbutton(master, variable=button3.checked, command= lambda: self.cb(button3) ).grid(row=2, sticky=E, padx=10)
         button4.checked = IntVar()
-        Checkbutton(master, variable=button4.checked).grid(row=3, sticky=E, padx=10)
+        Checkbutton(master, variable=button4.checked, command= lambda: self.cb(button4) ).grid(row=3, sticky=E, padx=10)
         button5.checked = IntVar()
-        Checkbutton(master, variable=button5.checked).grid(row=4, sticky=E, padx=10)
+        Checkbutton(master, variable=button5.checked, command= lambda: self.cb(button5) ).grid(row=4, sticky=E, padx=10)
+
+    def cb(self, button):
+        print(button.checked.get())
 
 #Making a new class to setup the canvas to write the graphs to.
 class Graph(Frame):
