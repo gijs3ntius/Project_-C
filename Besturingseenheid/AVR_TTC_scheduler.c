@@ -222,9 +222,3 @@ ISR(TIMER1_COMPA_vect)
 }
 
 // ------------------------------------------------------------------
-
-int main()
-{
-	// Hier moeten nog enkele statements komen ....!
-	return 0;
-}

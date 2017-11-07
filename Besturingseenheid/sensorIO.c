@@ -13,68 +13,67 @@
 #include "pinIO.h"
 #include <util/delay.h>
 
-const int trigPin = 9;
-const int echoPin = 10;
+const int trigPin = 9; // const
+const int echoPin = 10; // const
 
-const int light;
 
 long duration;
-int distance;
+int dis;
 
 
-/* Ultrasenoorsensor */
+/* Ultrasenoorsensor 
+*********************************************************************************************************************/
+
 void setUpUltra(){
-	trigPin = digital_config(9, OUT); // trigger pin wordt output
-	echoPin = digital_config(10, IN); // echo pin is input
+	digital_config(trigPin, OUT); // trigger pin wordt output
+	digital_config(echoPin, IN); // echo pin is input
 }
 
 void startPulse(){
-	trigPin = digital_write(LOW); // zorg ervoor dat trigger leeg is!
+	digital_write(trigPin, LOW); // zorg ervoor dat trigger leeg is!
 	_delay_ms(2);
 	
-	trigPin = digital_write(HIGH);
-	_delay_ms(10);
-	trigPin = digital_write(LOW);
+	digital_write(trigPin, HIGH);
+	_delay_us(10);
+	digital_write(trigPin, LOW);
 	
 }
 
 long readPulse(){
-	duration = digital_read(echoPin);
-	return duration;
+	duration = digital_read(echoPin); // pulse in maakt gebruik van timer, zelf een timer gebruiken om dit te regelen.
+	return duration; // eeprom gebruiken for ID bijhouden Settings op je Arduino bijhouden
+	// ardiuno moet zonder centrale door kunnen werken. Ardiuno 1 is voor zonnescherm 2. Ardiuno 2 is voor zonnescherm 2. 
+	//Informatie weergeven in python, instellingen erin zetten, handmatig scherm omhoog of omlaag doen(vanuit centrale).
+	// elke ardiuno is een klasse in centrale python.
 }
 
-int distance(duration){
-	distance = (duration * 0.034) / 2;
-	return distance;
+int distance(int duration_){
+	dis = (duration_ * 0.034) / 2;
+	return dis;
 }
 
 
 /* dit is een soort van de main functie. Hierdoor krijg je de juiste afstand terug. Dit in scheduler gooien */
-int getDistance(){
-	
-	setUpUltra();
-	
+uint8_t getDistance(){
+	uint8_t actDis;
 	startPulse();
-	distance = distance(readPulse());
+	actDis = readPulse();
+	dis = distance(actDis);
 	
-	return distance;
+	return dis;
 	
 }
 
 /* Temperatuursensor
-* verander het 10 bits getal in het voltage */
-float voltage(analog){
-	float voltage = analog * 5.0 / 1024;
-	// keer 5.0 omdat het om 5 volt gaat en gedeelt door 1024 omdat het een 10 bits getal is
-	// voorbeeld: 2.5 volt = 512 * 5.0 / 1024. Je krijgt 512(0x200) binnen
-	return voltage;
-	
-}
-
+* verander het 10 bits getal in het voltage 
+***************************************************************************************************************/
 
 /* Deze functie zorgt ervoor dat de gemeten voltage omgezet wordt naar temperatuur */
-float temperatureInC(voltage){
-	float temperatureC = (voltage - 0.5) * 100;
+float temperatureInC(uint16_t analog){
+	float volt = analog * 5.0 / 1024;
+	// keer 5.0 omdat het om 5 volt gaat en gedeelt door 1024 omdat het een 10 bits getal is
+	// voorbeeld: 2.5 volt = 512 * 5.0 / 1024. Je krijgt 512(0x200) binnen
+	float temperatureC = (volt - 0.5) * 100;
 	// de formule die ervoor zorgt dat het omgezet wordt.
 	// voorbeeld: (1.2 - 0.5) * 100 = 70 graden Celsius.
 	return temperatureC;
@@ -82,23 +81,22 @@ float temperatureInC(voltage){
 }
 
 
-float measure_Temp(){
-	float tempInC = temperatureInC(voltage(analog_read(0))); // lees ADC uit (A0) en maak er volt van en dan Celsius
+uint8_t getTemp(){
+	uint8_t tempInC = temperatureInC(analog_read(0)); // lees ADC uit (A0) en maak er volt van en dan Celsius
 	return tempInC;
-
 }
 
 
-int getTemp() {
-	int temperature;
-	temperature= measure_Temp(); // roep de functie aan die temperatuur uitleest
-	return temperature;
-}
+/* Photocell sensor 
+*********************************************************************************************************************/
 
 
-/* Photocell sensor */
-int getLight(){
-	light = analog_read(1); // lees A1 uit // deze functie nog uit Gijs zijn library halen
+uint8_t getLight(){
+	uint8_t light = (analog_read(1)>>2); 
+	// lees A1 uit, met een shift /4 
+	// Je krijgt een 10 bits getal. We schuiven hem twee keer naar rechts zodat je 8 bits hebt.
+	// Je verliest hier alleen de waarden 0-3 mee. Voor dit project niet erg.
+	
 	return light;
 }
 

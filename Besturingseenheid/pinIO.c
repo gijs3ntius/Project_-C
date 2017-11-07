@@ -71,35 +71,47 @@ int digital_read(int pin) {
  * Configures an ADC pin in this case pin 0
  */
 void analog_config() {
-	ADMUX |= _BV(REFS0); //Set reference voltage (see docs)
-	ADCSRA |= _BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0); // Set the prescaler
-	ADCSRA |= _BV(ADEN); // Enable ADC
+
+	// AREF = AVcc
+	// De ADC heeft een 'reference' voltage nodig. Wij willen de Vcc gebruiken (5v)
+	// ADMUX staat voor ADC multiplexer
+	ADMUX |= (1<<REFS0); // we zetten bit REFS0 op 1 (zie datasheet)
+	//ADMUX |= (1 << ADLAR);
+	
+	// ADC Enable en een prescaler van 128
+	// 16000000/128 = 125000
+	// ADC control en status register A
+	ADCSRA |= (1<<ADEN)|(1<<ADPS0)|(1<<ADPS1)|(1<<ADPS2); // enable ADC, zet ADC prescaler select bits
+	//ADCSRA |= (1<<ADEN);
+	
+	/* bron code: http://maxembedded.com/2011/06/the-adc-of-the-avr/  */
 }
 
 /*
  * Gets a value from an analog pin
- * https://gist.github.com/Wollw/2396604 code from Internet to read analog
  * TODO before reading setup the ADMUX and ADCSRA registers
  */
-uint16_t analog_read(uint8_t adcx) {
-	/* adcx is the analog pin we want to use.  ADMUX's first few bits are
-	 * the binary representations of the numbers of the pins so we can
-	 * just 'OR' the pin's number with ADMUX to select that pin.
-	 * We first zero the four bits by setting ADMUX equal to its higher
-	 * four bits. */
-	ADMUX	&=	0xf0;
-	ADMUX	|=	adcx;
-
-	/* This starts the conversion. */
-	ADCSRA |= _BV(ADSC);
-
-	/* This is an idle loop that just wait around until the conversion
-	 * is finished.  It constantly checks ADCSRA's ADSC bit, which we just
-	 * set above, to see if it is still set.  This bit is automatically
-	 * reset (zeroed) when the conversion is ready so if we do this in
-	 * a loop the loop will just go until the conversion is ready. */
-	while ( (ADCSRA & _BV(ADSC)) );
-
-	/* Finally, we return the converted value to the calling function. */
-	return ADC;
+uint16_t analog_read(uint8_t adcPoort) {
+	
+	// we 'masken' de input. De waarde die het kanaal doorgeeft blijft hetzelfde.
+	//adcPoort &= 0x0F;  // een AND met 15 (want 6 inputs)
+	// MUX 3:0 er zijn 4 bits. Dus 2^4 combinaties. Je hebt alleen de eerste 6 combi's nodig.
+	ADMUX = (ADMUX & 0xF0)|(adcPoort & 0x0F); // de laatste 3 bits worden op 0 gezet. Daarna wordt de juiste poort gepakt met een OR.
+	
+	// start single convertion
+	// write ’1? to ADSC
+	ADCSRA |= (1<<ADSC);
+	
+	
+	// wait for conversion to complete
+	// ADSC becomes ’0? again
+	// till then, run loop continuously
+	//while(ADCSRA & (1<<ADSC));
+	loop_until_bit_is_set(ADCSRA,ADSC);
+	
+	
+	return (ADC);
+	
+	
+	/* bron code: http://maxembedded.com/2011/06/the-adc-of-the-avr/  */
 }
