@@ -47,7 +47,7 @@ class SerialListener:
                         # value = data[1]  # SEE DATAPROTOCOL
                         # self.gui.notify(control_unit_id, sensor, value)  # gui needs to be updated
                     except Exception as e:
-                        continue
+                        continue  # continues but does not use the data which could be false
 
     def pause():
         self.paused = True
