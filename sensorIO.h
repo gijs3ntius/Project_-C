@@ -1,7 +1,7 @@
 /* include file voor temperatuur sensor */
 
 // Ultrasenoorsensor
-int getDistance();
+//int getDistance();
 
 // Photocell sensor
 int getLight();
