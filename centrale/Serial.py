@@ -19,15 +19,15 @@ class SerialConnection:
         self.baudrate = baudrate  # we are using 19200 as baudrate
         self.port = port
         self.connection = serial.Serial(baudrate=baudrate, port=port)  # setting up connection with port and baudrate.
-        # self.connection.open()
+        # self.connection.open() apparently it is already opened
         self.serialBusy = False
 
     """
     Function to check the connected port
     """
 
-    def portcheck(self):
-        print("Connected to: " + self.connection.port)  # prints to what port you are connected
+    def port_connected(self):
+        print(self.connection.port)  # prints to what port you are connected
 
     """
     Function to open the serial connection
@@ -47,7 +47,7 @@ class SerialConnection:
     Function to send command data to the Arduino
     @param: command(commands are listed using ENUM and will use the index of the command)
             value(the data type integer is used for value)
-    This function will convert the [command, value] list to bytes in order to send them to the Arduino. 
+    This function will convert the [command, value] list to bytes in order to send them to the Arduino.
     serialBusy is set and used to check if the program is busy.
     This function has been tested and is able to send both the hexvalues of the command and value over serial
     """
@@ -60,12 +60,12 @@ class SerialConnection:
             # time.sleep(1)  # wait 1 sec for the Arduino to get the command
             # self.connection.write(bytes([value]))
             self.serialBusy = False  # makes serial available again
-            return command_value  # serial finished successfully
+            return 1  # serial finished successfully
         else:
             return 0  # serial is already doing something
 
     """
-    Function to receive data from the Arduino. 
+    Function to receive data from the Arduino.
     This function will receive 2 datablocks of 1 byte/ 8 bits each time and add these to the data list.
     First datablock: first 4 bits = ID of Arduino, last 4 bits = data format
     Last datablock: all 8 bits contain the data
@@ -83,8 +83,3 @@ class SerialConnection:
             return data
         else:
             return 0  # serial is already doing something
-
-
-
-
-
