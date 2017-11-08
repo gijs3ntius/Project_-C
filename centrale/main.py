@@ -9,10 +9,20 @@ import re
 # I WILL START BUILDING THE LISTENER IN THE SAME FILE BUT IN A CLASS LISTENER OBVIOUSLY
 
 class Command(Enum):
-    UITROL = 0
-    INROL = 1
-    # etc
+    SET_ID = 0
+    ROL_OUT = 1
+    ROL_IN = 2
+    MAX_ROL_OUT = 3
+    MIN_ROL_OUT = 4
+    TEMP_ROL_IN = 5
+    TEMP_ROL_OUT = 6
+    LIGHT_ROL_IN = 7
+    LIGHT_ROL_OUT = 8
 
+class SensorType(Enum):
+    LIGHT = 1
+    TEMP = 2
+    DIST = 3
 
 class SerialListener:
     def __init__(self, GUI):
@@ -37,7 +47,7 @@ class SerialListener:
                     iteration_com_ports.append(port[0])
                     if re.sub(r'\s+\(\w+\)', "", port[1]) in self.supported_devices:  # regular expression to check if the device is supported
                         if port[0] not in com_ports:
-                            self.control_units.append(SerialConnection(baudrate=19200, port=port[0]))  # append an new SerialConnection
+                            self.control_units.append([port[0], SerialConnection(baudrate=19200, port=port[0])])  # append an new SerialConnection
                 com_ports = iteration_com_ports  # make sure the order and the value of the comports is updated
                 # --------------------------------------------------------------------------------------------------------------
                 # main loop : part 2 : reading the control_units
@@ -48,20 +58,26 @@ class SerialListener:
                         data = control_unit.receive()
                         if data == 0:  # if it is 0 something went wrong with receiving the data
                             continue  # continue to check the next control unit
-                        # int.from_bytes(byte, byteorder='big') keep in mind little and big endian
-                        print(data[0], '\n' , data[1].trim())
-                        # control_unit_id = data[0] >> 4
-                        # sensor = data[0] & 0x0F
-                        # value = data[1]  # SEE DATAPROTOCOL
+                        # int.from_bytes(byte, byteorder='big') keep in mind little and big endian not important
+                        header = int.from_bytes(data[0], byteorder='big')
+                        content = int.from_bytes(data[1], byteorder='big')
+                        control_unit_id = header >> 4  # SEE DATAPROTOCOL
+                        sensor = header & 0x0F  # SEE DATAPROTOCOL
+                        print(control_unit_id, sensor, content)
                         # self.gui.notify(control_unit_id, sensor, value)  # gui needs to be updated
                     except Exception as e:
                         continue  # continues but does not use the data which could be false
 
-    def pause():
+    def pause(self):
         self.paused = True
 
-    def unpause():
+    def unpause(self):
         self.paused = False
+
+    def send_command(self, comport, command, content):
+        self.pause()
+        self.connection
+        self.unpause()
 
 if __name__ == '__main__':
     test = 0  # this would be the GUI normally
