@@ -14,8 +14,8 @@
 // Delay between measures (on msec) , may occur problem if delay is short.Check datasheet
 
 volatile char is_measuring = 0;
-volatile uint16_t Timer0_counter = 0 ;
-volatile uint16_t distance;
+volatile uint8_t Timer0_counter = 0 ;
+volatile uint8_t distance;
 
 volatile long echo_start = 0;
 volatile long echo_duration = 0;
@@ -63,10 +63,12 @@ void startPulse(){
 }
 
 
-uint16_t calcDistance(){
-	echo_duration = Timer0_counter * 256; // keer 256 omdat hij pas 1 optelt na 256 ticks
-	distance = echo_duration * 0.034 / 2;
-	return distance;
+uint8_t calcDistance(){
+	uint8_t dis;
+	echo_duration = Timer0_counter; // keer 256 omdat hij pas 1 optelt na 256 ticks
+	_delay_ms(1);
+	dis = (echo_duration * 0.034 / 2); // het moet wel passen, vandaar bitshift
+	return dis;
 	
 }
 
@@ -79,7 +81,9 @@ uint8_t getDistance(){
 		{
 			is_measuring = 1;
 			startPulse();
-			distance = calcDistance(Timer0_counter);
+			_delay_ms(10);
+			distance = calcDistance();
+			transmitSerial(5);
 	
 		}
 
@@ -93,11 +97,14 @@ ISR(TIMER0_OVF_vect)  // Here every time Timer0 Overflow
 	if (digital_read(echoPin) == LOW)
 	{
 		echo_start = 0;
+		transmitSerial(4); // hier gaat het mis dus dit morgen uitzoeken!!!!!!!!!!
+		// ook kijken of het misgaat bij het veranderen naar een 8bits getal.
 	}
 	
 	if (echo_start)
 	{
 		Timer0_counter += 1; // hij telt tot 255 dan geeft hij een overflow. Bij overflow tellen we er 1 bij op
+		transmitSerial(3);
 	}
 	
 	
@@ -112,6 +119,7 @@ ISR(INT1_vect)
 		TCNT0 = 0; // clear counter
 		Timer0_counter = 0; // clear de timer counter
 		echo_start = 1;
+		transmitSerial(2);
 	}
 }
 
