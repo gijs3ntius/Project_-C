@@ -31,7 +31,10 @@ void Distance(){
 	transmitSerial(getDistance());
 }
 
-
+void turnOnLights2(){
+	turnOnLights();
+	
+}
 
 
 int main(void)
@@ -57,7 +60,7 @@ int main(void)
 	
 	//SCH_Add_Task(Distance, 0, 60); // je wilt 60 ms wachten totdat je opnieuw meet. Dit staat in de datasheet
 	
-	SCH_Add_Task(turnOnLights, 0, 100);
+	SCH_Add_Task(turnOnLights2, 0, 100);
 	
 
 
