@@ -94,16 +94,15 @@ class SerialListener:
     def loop_alternative(self):
         while True:
             if  not self.paused:
-                com_ports = list(list_ports.comports())
-                # mapping with comports is fixed when there is data received
+                com_ports = list(list_ports.comports())  # list all of the connected com devices
                 for com_port in com_ports:
-                    if re.sub(r'\s+\(\w+\)', "", com_port[1]) in self.supported_devices:
+                    if re.sub(r'\s+\(\w+\)', "", com_port[1]) in self.supported_devices:  # regular expression to check if the device is supported
                         connection = SerialConnection(baudrate=19200, port=com_port[0])
-                        if connection is not None:
+                        if connection is not None:  # connection is None when an error occurs
                             try:
                                 data = connection.receive()
                             except Exception as e:
-                                break  # TODO check if continue is better
+                                break  # break out of the for to update the com_ports
                             if data == 0:  # if it is 0 something went wrong with receiving the data
                                 continue  # continue to check the next control unit
                             # int.from_bytes(byte, byteorder='big' or byteorder='little') keep in mind little and big endian not important
