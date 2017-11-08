@@ -29,7 +29,7 @@ class SerialListener:
         # self.gui = GUI  # register the GUI to send data
         # GUI.register(self)  # register this object to the GUI, GUI will notify this object
         self.paused = False
-        self.control_units = []
+        self.control_units = {}
         self.supported_devices = ["Arduino Uno", "USB-SERIAL CH340"]
 
     def loop(self):
@@ -41,33 +41,37 @@ class SerialListener:
                 # --------------------------------------------------------------------------------------------------------------
                 # every iteration of the main loop all the ports are checked
                 iteration_com_ports = []  # every iteration build an list with all the arduino's
+                deletion_com_ports = []  # all the comports that are disconnected during the loop
                 for port in list_ports.comports():  # port is here a comport connected to the central unit
                     # port[0] is the COMX
                     # port[1] is the name of the com port
                     iteration_com_ports.append(port[0])
                     if re.sub(r'\s+\(\w+\)', "", port[1]) in self.supported_devices:  # regular expression to check if the device is supported
                         if port[0] not in com_ports:
-                            self.control_units.append([port[0], SerialConnection(baudrate=19200, port=port[0])])  # append an new SerialConnection
+                            self.control_units[port[0]] = SerialConnection(baudrate=19200, port=port[0])  # append an new SerialConnection
                 com_ports = iteration_com_ports  # make sure the order and the value of the comports is updated
                 # --------------------------------------------------------------------------------------------------------------
                 # main loop : part 2 : reading the control_units
                 # --------------------------------------------------------------------------------------------------------------
                 # every iteration of the main loop all the control units are read
-                for control_unit in self.control_units:
+                for control_unit_port in self.control_units.keys():
                     try:
-                        data = control_unit.receive()
+                        if control_unit_port not in com_ports: # if the comport is non existent add to remove list
+                            deletion_com_ports.append(control_unit_port)
+                        data = self.control_units[control_unit_port].receive()
                         if data == 0:  # if it is 0 something went wrong with receiving the data
                             continue  # continue to check the next control unit
-                        # int.from_bytes(byte, byteorder='big') keep in mind little and big endian not important
+                        # int.from_bytes(byte, byteorder='big' or byteorder='little') keep in mind little and big endian not important
                         header = int.from_bytes(data[0], byteorder='big')
                         content = int.from_bytes(data[1], byteorder='big')
                         control_unit_id = header >> 4  # SEE DATAPROTOCOL
                         sensor = header & 0x0F  # SEE DATAPROTOCOL
-                        print(control_unit_id, sensor, content)
+                        print(control_unit_id, sensor, content)  # for debugging purposes
                         # self.gui.notify(control_unit_id, sensor, value)  # gui needs to be updated
                     except Exception as e:
                         continue  # continues but does not use the data which could be false
-
+                for port in deletion_com_ports:  # delete all the items from the device dictionary that are not connected
+                    del self.control_units[port]
     def pause(self):
         self.paused = True
 
@@ -76,7 +80,7 @@ class SerialListener:
 
     def send_command(self, comport, command, content):
         self.pause()
-        self.connection
+        self.control_units[comport].send(command, content)
         self.unpause()
 
 if __name__ == '__main__':
