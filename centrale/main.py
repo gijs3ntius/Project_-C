@@ -1,10 +1,18 @@
 from Serial import SerialConnection
 from serial.tools import list_ports
+from enum import Enum
+import re
 
 # A OBSERVER PATTERN NEEDS TO BE IMPLEMENTED TO GET THE GUI AND THE SERIAL LISTENER WORK TOGETHER
 # THE LISTENER SHOULD PUSH DATA TO THE GUI EVERY TICK THERFOR THE GUI OBJECT SHOULD BE PASSED TO THE LISTENER
 # THE LISTENER SHOULD CALL REGISTER ON THE GUI WHEN IT IS INITIALIZED
 # I WILL START BUILDING THE LISTENER IN THE SAME FILE BUT IN A CLASS LISTENER OBVIOUSLY
+
+class Command(Enum):
+    UITROL = 0
+    INROL = 1
+    # etc
+
 
 class SerialListener:
     def __init__(self, GUI):
@@ -12,7 +20,7 @@ class SerialListener:
         # GUI.register(self)  # register this object to the GUI, GUI will notify this object
         self.paused = False
         self.control_units = []
-        pass
+        self.supported_devices = ["Arduino Uno", "USB-SERIAL CH340"]
 
     def loop(self):
         com_ports = []  # necessary to avoid adding existing com ports to the listener
@@ -24,10 +32,10 @@ class SerialListener:
                 # every iteration of the main loop all the ports are checked
                 iteration_com_ports = []  # every iteration build an list with all the arduino's
                 for port in list_ports.comports():  # port is here a comport connected to the central unit
-                    iteration_com_ports.append(port[0])
                     # port[0] is the COMX
                     # port[1] is the name of the com port
-                    if "Arduino" in port[1] or "arduino" in port[1] or "USB-SERIAL CH340" in port[1]:  # if the com port is communicating with an arduino
+                    iteration_com_ports.append(port[0])
+                    if re.sub(r'\s+\(\w+\)', "", port[1]) in self.supported_devices:  # regular expression to check if the device is supported
                         if port[0] not in com_ports:
                             self.control_units.append(SerialConnection(baudrate=19200, port=port[0]))  # append an new SerialConnection
                 com_ports = iteration_com_ports  # make sure the order and the value of the comports is updated
@@ -41,7 +49,7 @@ class SerialListener:
                         if data == 0:  # if it is 0 something went wrong with receiving the data
                             continue  # continue to check the next control unit
                         # int.from_bytes(byte, byteorder='big') keep in mind little and big endian
-                        print(data)
+                        print(data[0], '\n' , data[1].trim())
                         # control_unit_id = data[0] >> 4
                         # sensor = data[0] & 0x0F
                         # value = data[1]  # SEE DATAPROTOCOL
