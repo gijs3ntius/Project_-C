@@ -137,6 +137,15 @@
     <Compile Include="AVR_TTC_scheduler.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="distance_sensor.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="distance_sensor.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="EEPROMconfig.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>

@@ -20,6 +20,11 @@
 #define greenLight 12
 #define yellowLight 13
 
+#define HIGH 1
+#define LOW 0
+#define IN 0
+#define OUT 1
+
 
 /* Temperatuursensor
 * verander het 10 bits getal in het voltage 
@@ -62,38 +67,54 @@ uint8_t getLight(){
 
 
 void setUpLights(){
-	digital_config(redLight, OUT)
-	digital_config(greenLight, OUT)
-	digital_config(yellowLight, OUT)
+	digital_config(redLight, OUT);
+	digital_config(greenLight, OUT);
+	digital_config(yellowLight, OUT);
 }
 
 
 uint8_t rolledInOrOut(uint8_t command){
+	uint8_t i = 0;
+	
 	if (command == 2)
 	{
+		digital_write(redLight, LOW);
 		digital_write(greenLight, HIGH);
+		digital_write(yellowLight, LOW);
 		
 		for (i = 0; i < 10; i++)
 		{
 			digital_write(yellowLight, HIGH);
-			_delay_ms(500);
+			_delay_ms(5000);
 			digital_write(yellowLight, LOW);
-			_delay_ms(500);
+			_delay_ms(5000);
 		}
 	}
 	
 	if (command == 1)
 	{
+		digital_write(greenLight, LOW);
 		digital_write(redLight, HIGH);
+		digital_write(yellowLight, LOW);
 		
 		for (i = 0; i < 10; i++){
 			digital_write(yellowLight, HIGH);
-			_delay_ms(500);
+			_delay_ms(5000);
 			digital_write(yellowLight, LOW);
-			_delay_ms(500);	
+			_delay_ms(5000);	
 		}
 	}
 }
+
+/*Deze functie is er puur voor een simulatie. Om te testen */
+void turnOnLights(){
+	
+	rolledInOrOut(1);
+	_delay_ms(10000);
+	rolledInOrOut(2);
+	
+}
+
 
 
 void resetLights(){
