@@ -41,6 +41,7 @@ class Window(Frame):
 
         """
         The buttons which show the actual Arduinos on the left side of the Application.
+        These are put in frame1
         Functionality has yet to be added.
         """
 
@@ -57,6 +58,7 @@ class Window(Frame):
 
         """
         The checkbuttons to select a connected Arduino.
+        These are put in frame1.
         Functionality has yet to be added.
         """
 
@@ -89,6 +91,7 @@ class Window(Frame):
 
     """
     Function to make a canvas with lines which can be used to show a graph.
+    The position of the canvas has to be fixed. 
     """
 
     def plot(self,):
@@ -98,20 +101,28 @@ class Window(Frame):
         canvas.create_line(50, 550, 1150, 550, width=2)  # x-axis
         canvas.create_line(50, 550, 50, 50, width=2)  # y-axis
 
-        # x-axis
+        """
+        This block of code adds the vertical dotted lines in the graph, forming the squares.
+        """
+
         for i in range(23):
             x = 50 + (i * 50)
             canvas.create_line(x, 550, x, 50, width=1, dash=(2, 5))
             canvas.create_text(x, 550, text='%d' % (10 * i), anchor=N)
 
-        # y-axis
+        """
+        This block of code adds the horizontal dotted lines in the graph, forming the squares.
+        """
+
         for i in range(11):
             y = 550 - (i * 50)
             canvas.create_line(50, y, 1150, y, width=1, dash=(2, 5))
             canvas.create_text(40, y, text='%d' % (10 * i), anchor=E)
 
 
-
+"""
+The main function which runs the application.
+"""
 if __name__ == '__main__':
     root = Tk()
     app = Window(root)
