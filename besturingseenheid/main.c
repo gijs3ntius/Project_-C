@@ -41,17 +41,17 @@ int main(void)
 	
 	analog_config();
 	
-	//setUpInterrupt(); // voor de afstand
+	setUpInterrupt(); // voor de afstand
 
-	//setUpUltra(); // voor de afstand
+	setUpUltra(); // voor de afstand
 	
-	//setUpTimer0(); // voor de afstand
+	setUpTimer0(); // voor de afstand
 	
 	setUpLights();
 
 	initSerial();
 	
-	SCH_Init_T1(); // stel de scheduler in
+	//SCH_Init_T1(); // stel de scheduler in
 
 	//SCH_Add_Task(Light, 0, 200); // Voeg taken toe aan de scheduler Light zit op A1.
 	// 200 = 30000 dus om de 30 seconden
@@ -62,7 +62,7 @@ int main(void)
 	
 	//SCH_Add_Task(Distance, 0, 60); // je wilt 60 ms wachten totdat je opnieuw meet. Dit staat in de datasheet
 	
-	SCH_Add_Task(turnOnLights2, 0, 100);
+	//SCH_Add_Task(turnOnLights2, 0, 100);
 	
 
 
@@ -70,7 +70,10 @@ int main(void)
    
     while (1) 
     {
-		SCH_Dispatch_Tasks(); // verzend de taken
+		//SCH_Dispatch_Tasks(); // verzend de taken
+		Distance();
+		_delay_ms(60);
+		transmitSerial(1);
 		
 	}
 	
