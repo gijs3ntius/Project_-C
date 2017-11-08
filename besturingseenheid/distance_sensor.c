@@ -1,11 +1,11 @@
-
+/*
 
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
-#define F_CPU 16000000UL			     // 16.0 Mhz clock
-#define F_CPU_div    F_CPU/1000000
+//#define F_CPU 16000000UL			     // 16.0 Mhz clock
+//#define F_CPU_div    F_CPU/1000000
 
 
 #define TimeOutTime  300				// MAX time (on msec) for TimeOut Error
@@ -26,7 +26,7 @@ volatile int i=0;
 
 /* Ultrasenoorsensor
 *********************************************************************************************************************/
-
+/*
 void setUpUltra(){
 	digital_config(trigPin, OUT); // trigger pin wordt output
 	digital_config(echoPin, IN); // echo pin is input
@@ -60,6 +60,7 @@ void startPulse(){
 
 
 	/* dit is een soort van de main functie. Hierdoor krijg je de juiste afstand terug. Dit in scheduler gooien */
+	/*
 uint8_t getDistance(){
 		if (is_measuring == 0)
 		{
@@ -83,6 +84,7 @@ ISR(TIMER0_OVF_vect)  // Here every time Timer0 Overflow
 		if(ticks > max_ticks)
 		{
 			Ultra_is_on = 0;	 // ** Free the sensor to new measures**/
+	/*
 			is_measuring = 0;		 //  *************************
 			TimeOUT =1 ;        // Timeout ; Used it as you want.
 				
@@ -118,4 +120,5 @@ ISR(INT1_vect)
 			}
 
 }
+*/
 
