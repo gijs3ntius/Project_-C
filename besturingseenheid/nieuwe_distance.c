@@ -4,26 +4,25 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
-#define F_CPU 16000000UL			     // 16.0 Mhz clock
-#define F_CPU_div    F_CPU/1000000
+#define F_CPU 16E6			     // 16.0 Mhz clock
 
 #define HIGH 0x1
 #define LOW 0x0
+#define IN 0
+#define OUT 1
 
+// Delay between measures (on msec) , may occur problem if delay is short.Check datasheet
 
-#define Delay_Until_New_Measure 60		// Delay between measures (on msec) , may occur problem if delay is short.Check datasheet
-
-volatile char Ultra_is_on = 0;
 volatile char is_measuring = 0;
-volatile uint32_t Timer0_counter = 0 ;
+volatile uint16_t Timer0_counter = 0 ;
 volatile uint16_t distance;
 
 volatile long echo_start = 0;
 volatile long echo_duration = 0;
 
 
-#define trigPin 0
-#define echoPin 3
+#define trigPin 2
+#define echoPin 4
 
 
 /* Ultrasenoorsensor
@@ -39,7 +38,7 @@ void setUpInterrupt(){
 	
 	EIMSK  |= (1<<INT1);			// Enable INT1 interrupts.
 	
-	EICRA |= (1<<ISC11) ;		// The rising edge of INT1 generates an interrupt request.
+	EICRA |= (1<<ISC11);		// The rising edge of INT1 generates an interrupt request.
 	// dit betekent: als er iets binnenkomt op de echopin wordt er een interrupt gegeven.
 }
 
@@ -54,7 +53,7 @@ void setUpTimer0(){
 
 void startPulse(){
 	digital_write(trigPin, LOW); // zorg ervoor dat trigger leeg is!
-	_delay_ms(2);
+	_delay_us(2);
 	
 	digital_write(trigPin, HIGH);
 	
@@ -64,12 +63,23 @@ void startPulse(){
 }
 
 
-	/* dit is een soort van de main functie. Hierdoor krijg je de juiste afstand terug. Dit in scheduler gooien */
+uint16_t calcDistance(){
+	echo_duration = Timer0_counter * 256; // keer 256 omdat hij pas 1 optelt na 256 ticks
+	distance = echo_duration * 0.034 / 2;
+	return distance;
+	
+}
+
+
+/* dit is een soort van de main functie. Hierdoor krijg je de juiste afstand terug. Dit in scheduler gooien */
+	
 uint8_t getDistance(){
+	
 		if (is_measuring == 0)
 		{
+			is_measuring = 1;
 			startPulse();
-			calcDistance(echo_duration);
+			distance = calcDistance(Timer0_counter);
 	
 		}
 
@@ -77,41 +87,31 @@ uint8_t getDistance(){
 }
 	
 	
-/*	
+
 ISR(TIMER0_OVF_vect)  // Here every time Timer0 Overflow
 {
+	if (digital_read(echoPin) == LOW)
+	{
+		echo_start = 0;
+	}
+	
+	if (echo_start)
+	{
+		Timer0_counter += 1; // hij telt tot 255 dan geeft hij een overflow. Bij overflow tellen we er 1 bij op
+	}
 	
 	
-	
-
-} */
-
-
-uint16_t calcDistance(uint16_t counter){
-	
-	distance = counter * 0.034 / 2;
-	return distance;
-	
-}
-
+} 
 
 
 ISR(INT1_vect)
 {
 	
-	if (echo_start = 0)
+	if (echo_start == 0)
 	{
 		TCNT0 = 0; // clear counter
+		Timer0_counter = 0; // clear de timer counter
 		echo_start = 1;
 	}
-	if (echo_start = 1)
-	{
-		echo_duration += TCNT0; // sla de counter op
-	}
-	
-	//echo_start = 1;
-	//echo_duration = TCNT0; // sla de counter op
-	//TCNT0 = 0; // clear counter
-
 }
 
