@@ -16,6 +16,10 @@
 #include <avr/interrupt.h>
 //#inculde distance_sensor
 
+#define redLight 11
+#define greenLight 12
+#define yellowLight 13
+
 
 /* Temperatuursensor
 * verander het 10 bits getal in het voltage 
@@ -53,4 +57,48 @@ uint8_t getLight(){
 	return light;
 }
 
+/* Uit en inrol lampjes
+*******************************************************************************************************************/
+
+
+void setUpLights(){
+	digital_config(redLight, OUT)
+	digital_config(greenLight, OUT)
+	digital_config(yellowLight, OUT)
+}
+
+
+uint8_t rolledInOrOut(uint8_t command){
+	if (command == 2)
+	{
+		digital_write(greenLight, HIGH);
+		
+		for (i = 0; i < 10; i++)
+		{
+			digital_write(yellowLight, HIGH);
+			_delay_ms(500);
+			digital_write(yellowLight, LOW);
+			_delay_ms(500);
+		}
+	}
+	
+	if (command == 1)
+	{
+		digital_write(redLight, HIGH);
+		
+		for (i = 0; i < 10; i++){
+			digital_write(yellowLight, HIGH);
+			_delay_ms(500);
+			digital_write(yellowLight, LOW);
+			_delay_ms(500);	
+		}
+	}
+}
+
+
+void resetLights(){
+	digital_write(redLight, LOW);
+	digital_write(greenLight, LOW);
+	digital_write(yellowLight, LOW);
+}
 
