@@ -19,10 +19,12 @@ class Command(Enum):
     LIGHT_ROL_IN = 7
     LIGHT_ROL_OUT = 8
 
+
 class SensorType(Enum):
     LIGHT = 1
     TEMP = 2
     DIST = 3
+
 
 class SerialListener:
     def __init__(self, GUI):
@@ -30,11 +32,14 @@ class SerialListener:
         # GUI.register(self)  # register this object to the GUI, GUI will notify this object
         self.paused = False
         self.control_units = {}
+        self.com_ports = []  # necessary to avoid adding existing com ports to the listener
+        self.port_mapping = {}  # dictionary to keep track of the id's with the com ports
         self.supported_devices = ["Arduino Uno", "USB-SERIAL CH340"]
 
     def loop(self):
-        com_ports = []  # necessary to avoid adding existing com ports to the listener
+        # self.gui.register_ports(com_ports)  # register the comports to the gui
         while True:  # main loops that keeps running IN A LISTENER
+            # print(self.paused, self.control_units, self.com_ports, self.port_mapping)  # used for debugging purposes
             if  not self.paused:  # check if the program needs to be paused with listening to serial
                 # --------------------------------------------------------------------------------------------------------------
                 # main loop : part 1 : configuring the control_units
@@ -47,17 +52,22 @@ class SerialListener:
                     # port[1] is the name of the com port
                     iteration_com_ports.append(port[0])
                     if re.sub(r'\s+\(\w+\)', "", port[1]) in self.supported_devices:  # regular expression to check if the device is supported
-                        if port[0] not in com_ports:
+                        if port[0] not in self.com_ports:  # TODO fix the problem with adding the arduino to another com port
                             self.control_units[port[0]] = SerialConnection(baudrate=19200, port=port[0])  # append an new SerialConnection
-                com_ports = iteration_com_ports  # make sure the order and the value of the comports is updated
+                            if self.control_units[port[0]] is None:  # if the connection failed remove the unit and the com port
+                                del self.control_units[port[0]]
+                                iteration_com_ports.remove(port[0])
+                            # self.send_command(comport, Command.SET_ID, content)  # set ID to the control_unit
+                self.com_ports = iteration_com_ports  # make sure the order and the value of the comports is updated
                 # --------------------------------------------------------------------------------------------------------------
                 # main loop : part 2 : reading the control_units
                 # --------------------------------------------------------------------------------------------------------------
                 # every iteration of the main loop all the control units are read
                 for control_unit_port in self.control_units.keys():
-                    try:
-                        if control_unit_port not in com_ports: # if the comport is non existent add to remove list
+                    try:  # try block used because there may occur read conflicts with the serial port
+                        if control_unit_port not in self.com_ports: # if the comport is non existent add to remove list
                             deletion_com_ports.append(control_unit_port)
+                            continue  # skip the rest of the code of this port
                         data = self.control_units[control_unit_port].receive()
                         if data == 0:  # if it is 0 something went wrong with receiving the data
                             continue  # continue to check the next control unit
@@ -66,12 +76,21 @@ class SerialListener:
                         content = int.from_bytes(data[1], byteorder='big')
                         control_unit_id = header >> 4  # SEE DATAPROTOCOL
                         sensor = header & 0x0F  # SEE DATAPROTOCOL
-                        print(control_unit_id, sensor, content)  # for debugging purposes
-                        # self.gui.notify(control_unit_id, sensor, value)  # gui needs to be updated
+                        self.port_mapping[control_unit_id] = control_unit_port  # update port mapping
+                        print(control_unit_id, self.port_mapping, sensor, content)  # for debugging purposes
+                        # self.gui.update(control_unit_id, control_unit_port, sensor, value)  # gui needs to be updated
                     except Exception as e:
                         continue  # continues but does not use the data which could be false
-                for port in deletion_com_ports:  # delete all the items from the device dictionary that are not connected
-                    del self.control_units[port]
+                if len(deletion_com_ports) > 0:  # there are changes in the com_ports connected
+                    # self.gui.notify_ports(self.com_ports)  # notify the gui of changes in the comports connected
+                    for port in deletion_com_ports:  # delete all the items from the device dictionary that are not connected
+                        try:
+                            self.control_units[port].close()
+                            del self.control_units[port]
+                            self.com_ports.remove(port)
+                        except Exception as e:
+                            continue
+
     def pause(self):
         self.paused = True
 
@@ -82,6 +101,7 @@ class SerialListener:
         self.pause()
         self.control_units[comport].send(command, content)
         self.unpause()
+
 
 if __name__ == '__main__':
     test = 0  # this would be the GUI normally

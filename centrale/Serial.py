@@ -18,7 +18,10 @@ class SerialConnection:
     def __init__(self, baudrate, port):
         self.baudrate = baudrate  # we are using 19200 as baudrate
         self.port = port
-        self.connection = serial.Serial(baudrate=baudrate, port=port)  # setting up connection with port and baudrate.
+        try:
+            self.connection = serial.Serial(baudrate=baudrate, port=port)  # setting up connection with port and baudrate.
+        except Exception as e:
+            return None  # return 0 to indicate the connection failed
         # self.connection.open() apparently it is already opened
         self.serialBusy = False
 
