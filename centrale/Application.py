@@ -1,5 +1,4 @@
 from tkinter import *
-from tkinter import ttk
 
 """
 Version: 1.0.1
@@ -10,7 +9,7 @@ Date: 01 Nov 2017
 msg = "Please insert an Arduino"  # The message used in the GUI.
 
 
-class Window(Frame):  # FRAMES INDELEN VOORDAT JE DE WIDGETS ADD ANDERS AIDS
+class Window(Frame):
 
     """
     Init the constructor of the Window class.
@@ -22,6 +21,10 @@ class Window(Frame):  # FRAMES INDELEN VOORDAT JE DE WIDGETS ADD ANDERS AIDS
         Frame.__init__(self, master)
         self.master = master
         self.listener = None
+        self.frame1 = Frame(master)
+        self.frame1.grid(row=0)
+        self.frame2 = Frame(master)
+        self.frame2.grid(row=1, rowspan=3, column=1, columnspan=3)
 
     """
     The function to create the first buttons and place them on the master window.
@@ -41,15 +44,15 @@ class Window(Frame):  # FRAMES INDELEN VOORDAT JE DE WIDGETS ADD ANDERS AIDS
         Functionality has yet to be added.
         """
 
-        button1 = Button(text=msg, height=10, width=60, state=DISABLED)
+        button1 = Button(self.frame1, text=msg, height=10, width=30, state=DISABLED)
         button1.grid(row=0, column=0)
-        button2 = Button(text=msg, height=10, width=60, state=DISABLED)
+        button2 = Button(self.frame1, text=msg, height=10, width=30, state=DISABLED)
         button2.grid(row=1, column=0)
-        button3 = Button(text=msg, height=10, width=60, state=DISABLED)
+        button3 = Button(self.frame1, text=msg, height=10, width=30, state=DISABLED)
         button3.grid(row=2, column=0)
-        button4 = Button(text=msg, height=10, width=60, state=DISABLED)
+        button4 = Button(self.frame1, text=msg, height=10, width=30, state=DISABLED)
         button4.grid(row=3, column=0)
-        button5 = Button(text=msg, height=10, width=60, state=DISABLED)
+        button5 = Button(self.frame1, text=msg, height=10, width=30, state=DISABLED)
         button5.grid(row=4, column=0)
 
         """
@@ -58,15 +61,15 @@ class Window(Frame):  # FRAMES INDELEN VOORDAT JE DE WIDGETS ADD ANDERS AIDS
         """
 
         button1.checked = IntVar()
-        Checkbutton(variable=button1.checked).grid(row=0, sticky=E, padx=10)
+        Checkbutton(self.frame1, variable=button1.checked).grid(row=0, sticky=E, padx=10)
         button2.checked = IntVar()
-        Checkbutton(variable=button2.checked).grid(row=1, sticky=E, padx=10)
+        Checkbutton(self.frame1, variable=button2.checked).grid(row=1, sticky=E, padx=10)
         button3.checked = IntVar()
-        Checkbutton(variable=button3.checked).grid(row=2, sticky=E, padx=10)
+        Checkbutton(self.frame1, variable=button3.checked).grid(row=2, sticky=E, padx=10)
         button4.checked = IntVar()
-        Checkbutton(variable=button4.checked).grid(row=3, sticky=E, padx=10)
+        Checkbutton(self.frame1, variable=button4.checked).grid(row=3, sticky=E, padx=10)
         button5.checked = IntVar()
-        Checkbutton(variable=button5.checked).grid(row=4, sticky=E, padx=10)
+        Checkbutton(self.frame1, variable=button5.checked).grid(row=4, sticky=E, padx=10)
 
     """
     The function to read and receive the data coming from the Arduino.
@@ -84,37 +87,34 @@ class Window(Frame):  # FRAMES INDELEN VOORDAT JE DE WIDGETS ADD ANDERS AIDS
     def notify(self, data):
         pass
 
-"""
-class Graph(Canvas):
-    def __init__(self):
-        self.start = 1
+    """
+    Function to make a canvas with lines which can be used to show a graph.
+    """
 
-    def make_canvas(self):
-        canvas = Canvas(root, width=400, height=400, bg='white')
-        canvas.grid(row=0, column=1)
+    def plot(self,):
+        canvas = Canvas(width=1000, height=600, bg='white')  # 0,0 is top left corner
+        canvas.grid(row=0, column=2)
+
+        canvas.create_line(50, 550, 1150, 550, width=2)  # x-axis
+        canvas.create_line(50, 550, 50, 50, width=2)  # y-axis
+
+        # x-axis
+        for i in range(23):
+            x = 50 + (i * 50)
+            canvas.create_line(x, 550, x, 50, width=1, dash=(2, 5))
+            canvas.create_text(x, 550, text='%d' % (10 * i), anchor=N)
+
+        # y-axis
+        for i in range(11):
+            y = 550 - (i * 50)
+            canvas.create_line(50, y, 1150, y, width=1, dash=(2, 5))
+            canvas.create_text(40, y, text='%d' % (10 * i), anchor=E)
 
 
-
-
-
-
-
-
-    def tab(self):
-        nb = ttk.Notebook(root)
-        page1 = ttk.Frame(nb)
-        page2 = ttk.Frame(nb)
-
-        nb.add(page1, text='One')
-        nb.add(page2, text='Two')
-
-        #nb.grid(row=0)
-
-"""
 
 if __name__ == '__main__':
     root = Tk()
     app = Window(root)
     app.first_window()
-    app.make_canvas()
+    app.plot()
     root.mainloop()
