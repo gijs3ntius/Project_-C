@@ -39,7 +39,7 @@ class SerialListener:
     def loop(self):
         # self.gui.register_ports(com_ports)  # register the comports to the gui
         while True:  # main loops that keeps running IN A LISTENER
-            # print(self.paused, self.control_units, self.com_ports, self.port_mapping)  # used for debugging purposes
+            print(self.paused, self.control_units, self.com_ports, self.port_mapping)  # used for debugging purposes
             if  not self.paused:  # check if the program needs to be paused with listening to serial
                 # --------------------------------------------------------------------------------------------------------------
                 # main loop : part 1 : configuring the control_units
@@ -91,6 +91,30 @@ class SerialListener:
                         except Exception as e:
                             continue
 
+    def loop_alternative(self):
+        while True:
+            if  not self.paused:
+                com_ports = list(list_ports.comports())  # list all of the connected com devices
+                for com_port in com_ports:
+                    if re.sub(r'\s+\(\w+\)', "", com_port[1]) in self.supported_devices:  # regular expression to check if the device is supported
+                        connection = SerialConnection(baudrate=19200, port=com_port[0])
+                        if connection is not None:  # connection is None when an error occurs
+                            try:
+                                data = connection.receive()
+                            except Exception as e:
+                                break  # break out of the for to update the com_ports
+                            if data == 0:  # if it is 0 something went wrong with receiving the data
+                                continue  # continue to check the next control unit
+                            # int.from_bytes(byte, byteorder='big' or byteorder='little') keep in mind little and big endian not important
+                            header = int.from_bytes(data[0], byteorder='big')
+                            content = int.from_bytes(data[1], byteorder='big')
+                            control_unit_id = header >> 4  # SEE DATAPROTOCOL
+                            sensor = header & 0x0F  # SEE DATAPROTOCOL
+                            self.port_mapping[control_unit_id] = com_port[0]  # update port mapping
+                            print(control_unit_id, self.port_mapping, sensor, content)  # for debugging purposes
+                        connection.close()
+
+
     def pause(self):
         self.paused = True
 
@@ -106,4 +130,4 @@ class SerialListener:
 if __name__ == '__main__':
     test = 0  # this would be the GUI normally
     sl = SerialListener(test)
-    sl.loop()
+    sl.loop_alternative()
