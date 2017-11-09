@@ -15,27 +15,21 @@
 #include <avr/eeprom.h>
 
 
-void resetADC(){
-	ADC = 0x000;
-	
-}
-
-
 void Light(){
-	uint8_t command = 0b00110001;
-	uint8_t data = getLight();
+	uint8_t command = 0b0001;
+	uint8_t data1 = getLight();
 	transmitSerial(command);
 	_delay_ms(50);
-	transmitSerial(data);
+	transmitSerial(data1);
 	_delay_ms(10);
 }
 
 void Temperature(){
-	uint8_t command = 0b00110010;
-	uint8_t data = getTemp();
+	uint8_t command = 0b0010;
+	uint8_t data2 = getTemp();
 	transmitSerial(command);
 	_delay_ms(50);
-	transmitSerial(data);
+	transmitSerial(data2);
 	_delay_ms(10);
 
 }
@@ -55,15 +49,11 @@ void turnOnLights2(){
 	
 }
 
-void testKutSchedular(){
-	analog_read(3);
-}
-
 
 int main(void)
 {
 	
-	analog_config();
+	//analog_config();
 	
 	//setUpUltra(); // voor de afstand
 	
@@ -77,12 +67,12 @@ int main(void)
 	
 	SCH_Init_T1(); // stel de scheduler in
 	
-	//SCH_Add_Task(Temperature, 0, 200); // temp zit op A0.
+	SCH_Add_Task(Temperature, 0, 1000); // temp zit op A0.
 	// 200 = 40000 dus om de 40 seconden
 	
 	//SCH_Add_Task(testKutSchedular,0, 200);
 
-	SCH_Add_Task(Light, 0, 300); // Voeg taken toe aan de scheduler Light zit op A1.
+	SCH_Add_Task(Light, 500, 1000); // Voeg taken toe aan de scheduler Light zit op A1.
 	// 200 = 30000 dus om de 30 seconden
 	// om de 60 seconden deze waarden naar centrale sturen.
 	
