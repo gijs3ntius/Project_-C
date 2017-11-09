@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Command(Enum):
     SET_ID = 0
     ROL_OUT = 1
