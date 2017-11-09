@@ -1,6 +1,5 @@
-from Serial import SerialConnection
+from connections import SerialConnection
 from serial.tools import list_ports
-from enum import Enum
 import time
 import re
 
