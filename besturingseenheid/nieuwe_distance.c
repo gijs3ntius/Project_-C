@@ -21,8 +21,8 @@ volatile long echo_start = 0;
 volatile long echo_duration = 0;
 
 
-#define trigPin 2
-#define echoPin 4
+#define trigPin 5
+#define echoPin 6
 
 
 /* Ultrasenoorsensor
@@ -59,6 +59,7 @@ void startPulse(){
 	
 	_delay_us(10);
 	digital_write(trigPin, LOW);
+	transmitSerial(8);
 	
 }
 
@@ -68,6 +69,7 @@ uint8_t calcDistance(){
 	echo_duration = Timer0_counter; // keer 256 omdat hij pas 1 optelt na 256 ticks
 	_delay_ms(1);
 	dis = (echo_duration * 0.034 / 2); // het moet wel passen, vandaar bitshift
+	transmitSerial(7);
 	return dis;
 	
 }
@@ -94,18 +96,20 @@ uint8_t getDistance(){
 
 ISR(TIMER0_OVF_vect)  // Here every time Timer0 Overflow
 {
-	if (digital_read(echoPin) == LOW)
-	{
-		echo_start = 0;
-		transmitSerial(4); // hier gaat het mis dus dit morgen uitzoeken!!!!!!!!!!
-		// ook kijken of het misgaat bij het veranderen naar een 8bits getal.
-	}
 	
 	if (echo_start)
 	{
 		Timer0_counter += 1; // hij telt tot 255 dan geeft hij een overflow. Bij overflow tellen we er 1 bij op
 		transmitSerial(3);
 	}
+	
+	if (PIND & 0x00)
+	{
+		echo_start = 0;
+		transmitSerial(4); // hier gaat het mis dus dit morgen uitzoeken!!!!!!!!!!
+		// ook kijken of het misgaat bij het veranderen naar een 8bits getal.
+	}
+	
 	
 	
 } 
