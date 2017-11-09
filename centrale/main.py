@@ -95,6 +95,7 @@ class SerialListener:
         while True:
             if  not self.paused:
                 com_ports = list(list_ports.comports())  # list all of the connected com devices
+                data_list = []
                 for com_port in com_ports:
                     if re.sub(r'\s+\(\w+\)', "", com_port[1]) in self.supported_devices:  # regular expression to check if the device is supported
                         connection = SerialConnection(baudrate=19200, port=com_port[0])
@@ -111,8 +112,10 @@ class SerialListener:
                             control_unit_id = header >> 4  # SEE DATAPROTOCOL
                             sensor = header & 0x0F  # SEE DATAPROTOCOL
                             self.port_mapping[control_unit_id] = com_port[0]  # update port mapping
-                            print(control_unit_id, self.port_mapping, sensor, content)  # for debugging purposes
+                            data_list.append([control_unit_id, self.port_mapping, sensor, content])
+                            print(control_unit_id, self.port_mapping, "type:", sensor, "value:", content)  # for debugging purposes
                         connection.close()
+                # self.gui.update(data_list)  send data in a list
 
 
     def pause(self):
