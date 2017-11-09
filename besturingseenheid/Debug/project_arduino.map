@@ -70,14 +70,6 @@ Discarded input sections
  .text          0x00000000        0x0 AVR_TTC_scheduler.o
  .data          0x00000000        0x0 AVR_TTC_scheduler.o
  .bss           0x00000000        0x0 AVR_TTC_scheduler.o
- .text.SCH_Add_Task
-                0x00000000       0x6a AVR_TTC_scheduler.o
- .text.SCH_Delete_Task
-                0x00000000       0x20 AVR_TTC_scheduler.o
- .text.SCH_Dispatch_Tasks
-                0x00000000       0x48 AVR_TTC_scheduler.o
- .text.SCH_Init_T1
-                0x00000000       0x2c AVR_TTC_scheduler.o
  .text          0x00000000        0x0 distance_sensor.o
  .data          0x00000000        0x0 distance_sensor.o
  .bss           0x00000000        0x0 distance_sensor.o
@@ -111,27 +103,48 @@ Discarded input sections
  .text          0x00000000        0x0 main.o
  .data          0x00000000        0x0 main.o
  .bss           0x00000000        0x0 main.o
- .text.Light    0x00000000       0x16 main.o
- .text.Temperature
+ .text.resetADC
+                0x00000000        0xa main.o
+ .text.Distance
                 0x00000000        0xa main.o
  .text.turnOnLights2
                 0x00000000        0x6 main.o
+ .text.testKutSchedular
+                0x00000000        0x8 main.o
  .text          0x00000000        0x0 nieuwe_distance.o
  .data          0x00000000        0x0 nieuwe_distance.o
  .bss           0x00000000        0x0 nieuwe_distance.o
+ .text.setUpUltra
+                0x00000000       0x1a nieuwe_distance.o
+ .text.setUpInterrupt
+                0x00000000       0x10 nieuwe_distance.o
+ .text.setUpTimer0
+                0x00000000       0x1a nieuwe_distance.o
+ .text.startPulse
+                0x00000000       0x38 nieuwe_distance.o
+ .text.calcDistance
+                0x00000000       0x76 nieuwe_distance.o
+ .text.getDistance
+                0x00000000       0x34 nieuwe_distance.o
+ .bss.echo_duration
+                0x00000000        0x4 nieuwe_distance.o
+ .bss.is_measuring
+                0x00000000        0x1 nieuwe_distance.o
+ COMMON         0x00000000        0x1 nieuwe_distance.o
  .text          0x00000000        0x0 pinIO.o
  .data          0x00000000        0x0 pinIO.o
  .bss           0x00000000        0x0 pinIO.o
- .text.analog_read
-                0x00000000       0x28 pinIO.o
+ .text.digital_config
+                0x00000000       0x9a pinIO.o
+ .text.digital_write
+                0x00000000       0x9a pinIO.o
+ .text.digital_read
+                0x00000000       0x5e pinIO.o
  .text          0x00000000        0x0 sensorIO.o
  .data          0x00000000        0x0 sensorIO.o
  .bss           0x00000000        0x0 sensorIO.o
- .text.temperatureInC
-                0x00000000       0x3c sensorIO.o
- .text.getTemp  0x00000000       0x12 sensorIO.o
- .text.getLight
-                0x00000000       0x10 sensorIO.o
+ .text.setUpLights
+                0x00000000       0x26 sensorIO.o
  .text.rolledInOrOut
                 0x00000000       0xdc sensorIO.o
  .text.turnOnLights
@@ -150,13 +163,9 @@ Discarded input sections
  .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3.o)
  .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3.o)
- .text.avr-libc.fplib
-                0x00000000        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3.o)
  .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3x.o)
  .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3x.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3x.o)
- .text.avr-libc.fplib
-                0x00000000       0xcc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3x.o)
  .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixunssfsi.o)
  .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixunssfsi.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixunssfsi.o)
@@ -540,7 +549,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x7c6
+.text           0x00000000      0x77e
  *(.vectors)
  .vectors       0x00000000       0x68 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega328p/avr5/crtatmega328p.o
                 0x00000000                __vector_default
@@ -624,104 +633,106 @@ END GROUP
                 0x000000a2                __vector_20
                 0x000000a6                . = ALIGN (0x2)
  *(.text.*)
+ .text.SCH_Add_Task
+                0x000000a6       0x6a AVR_TTC_scheduler.o
+                0x000000a6                SCH_Add_Task
+ .text.SCH_Delete_Task
+                0x00000110       0x20 AVR_TTC_scheduler.o
+                0x00000110                SCH_Delete_Task
+ .text.SCH_Dispatch_Tasks
+                0x00000130       0x48 AVR_TTC_scheduler.o
+                0x00000130                SCH_Dispatch_Tasks
+ .text.SCH_Init_T1
+                0x00000178       0x2c AVR_TTC_scheduler.o
+                0x00000178                SCH_Init_T1
  .text.SCH_Start
-                0x000000a6        0x4 AVR_TTC_scheduler.o
-                0x000000a6                SCH_Start
+                0x000001a4        0x4 AVR_TTC_scheduler.o
+                0x000001a4                SCH_Start
  .text.__vector_11
-                0x000000aa       0x70 AVR_TTC_scheduler.o
-                0x000000aa                __vector_11
- .text.Distance
-                0x0000011a        0xa main.o
-                0x0000011a                Distance
- .text.main     0x00000124       0x3a main.o
-                0x00000124                main
- .text.setUpUltra
-                0x0000015e       0x1a nieuwe_distance.o
-                0x0000015e                setUpUltra
- .text.setUpInterrupt
-                0x00000178       0x10 nieuwe_distance.o
-                0x00000178                setUpInterrupt
- .text.setUpTimer0
-                0x00000188       0x1a nieuwe_distance.o
-                0x00000188                setUpTimer0
- .text.startPulse
-                0x000001a2       0x30 nieuwe_distance.o
-                0x000001a2                startPulse
- .text.calcDistance
-                0x000001d2       0x5a nieuwe_distance.o
-                0x000001d2                calcDistance
- .text.getDistance
-                0x0000022c       0x34 nieuwe_distance.o
-                0x0000022c                getDistance
+                0x000001a8       0x70 AVR_TTC_scheduler.o
+                0x000001a8                __vector_11
+ .text.Temperature
+                0x00000218       0x1e main.o
+                0x00000218                Temperature
+ .text.Light    0x00000236       0x1e main.o
+                0x00000236                Light
+ .text.main     0x00000254       0x36 main.o
+                0x00000254                main
  .text.__vector_16
-                0x00000260       0x92 nieuwe_distance.o
-                0x00000260                __vector_16
+                0x0000028a       0x70 nieuwe_distance.o
+                0x0000028a                __vector_16
  .text.__vector_2
-                0x000002f2       0x82 nieuwe_distance.o
-                0x000002f2                __vector_2
- .text.digital_config
-                0x00000374       0x9a pinIO.o
-                0x00000374                digital_config
- .text.digital_write
-                0x0000040e       0x9a pinIO.o
-                0x0000040e                digital_write
- .text.digital_read
-                0x000004a8       0x5e pinIO.o
-                0x000004a8                digital_read
+                0x000002fa       0x82 nieuwe_distance.o
+                0x000002fa                __vector_2
  .text.analog_config
-                0x00000506       0x16 pinIO.o
-                0x00000506                analog_config
- .text.setUpLights
-                0x0000051c       0x26 sensorIO.o
-                0x0000051c                setUpLights
+                0x0000037c       0x16 pinIO.o
+                0x0000037c                analog_config
+ .text.analog_read
+                0x00000392       0x28 pinIO.o
+                0x00000392                analog_read
+ .text.temperatureInC
+                0x000003ba       0x3c sensorIO.o
+                0x000003ba                temperatureInC
+ .text.getTemp  0x000003f6       0x1a sensorIO.o
+                0x000003f6                getTemp
+ .text.getLight
+                0x00000410       0x10 sensorIO.o
+                0x00000410                getLight
  .text.initSerial
-                0x00000542       0x1c serialConnection.o
-                0x00000542                initSerial
+                0x00000420       0x1c serialConnection.o
+                0x00000420                initSerial
  .text.transmitSerial
-                0x0000055e       0x10 serialConnection.o
-                0x0000055e                transmitSerial
+                0x0000043c       0x10 serialConnection.o
+                0x0000043c                transmitSerial
  .text.avr-libc.fplib
-                0x0000056e       0x5e c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixunssfsi.o)
-                0x0000056e                __fixunssfsi
+                0x0000044c        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3.o)
+                0x0000044c                __subsf3
+                0x0000044e                __addsf3
  .text.avr-libc.fplib
-                0x000005cc       0x7a c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(floatsisf.o)
-                0x000005cc                __floatunsisf
-                0x000005d0                __floatsisf
+                0x0000045a       0xcc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3x.o)
+                0x0000047c                __addsf3x
  .text.avr-libc.fplib
-                0x00000646        0xc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_inf.o)
-                0x00000646                __fp_inf
+                0x00000526       0x5e c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixunssfsi.o)
+                0x00000526                __fixunssfsi
  .text.avr-libc.fplib
-                0x00000652        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_nan.o)
-                0x00000652                __fp_nan
+                0x00000584       0x7a c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(floatsisf.o)
+                0x00000584                __floatunsisf
+                0x00000588                __floatsisf
  .text.avr-libc.fplib
-                0x00000658        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscA.o)
-                0x00000658                __fp_pscA
+                0x000005fe        0xc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_inf.o)
+                0x000005fe                __fp_inf
  .text.avr-libc.fplib
-                0x00000666        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscB.o)
-                0x00000666                __fp_pscB
+                0x0000060a        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_nan.o)
+                0x0000060a                __fp_nan
  .text.avr-libc.fplib
-                0x00000674       0x22 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_round.o)
-                0x00000674                __fp_round
+                0x00000610        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscA.o)
+                0x00000610                __fp_pscA
  .text.avr-libc.fplib
-                0x00000696       0x44 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_split3.o)
-                0x00000696                __fp_split3
-                0x000006a6                __fp_splitA
+                0x0000061e        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscB.o)
+                0x0000061e                __fp_pscB
  .text.avr-libc.fplib
-                0x000006da        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_zero.o)
-                0x000006da                __fp_zero
-                0x000006dc                __fp_szero
+                0x0000062c       0x22 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_round.o)
+                0x0000062c                __fp_round
  .text.avr-libc.fplib
-                0x000006e8        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3.o)
-                0x000006e8                __mulsf3
+                0x0000064e       0x44 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_split3.o)
+                0x0000064e                __fp_split3
+                0x0000065e                __fp_splitA
  .text.avr-libc.fplib
-                0x000006f0       0xd2 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3x.o)
-                0x0000070e                __mulsf3x
-                0x00000714                __mulsf3_pse
-                0x000007c2                . = ALIGN (0x2)
+                0x00000692        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_zero.o)
+                0x00000692                __fp_zero
+                0x00000694                __fp_szero
+ .text.avr-libc.fplib
+                0x000006a0        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3.o)
+                0x000006a0                __mulsf3
+ .text.avr-libc.fplib
+                0x000006a8       0xd2 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3x.o)
+                0x000006c6                __mulsf3x
+                0x000006cc                __mulsf3_pse
+                0x0000077a                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000007c2        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
-                0x000007c2                _exit
-                0x000007c2                exit
+ .fini9         0x0000077a        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+                0x0000077a                _exit
+                0x0000077a                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -740,11 +751,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000007c2        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .fini0         0x0000077a        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x000007c6                _etext = .
+                0x0000077e                _etext = .
 
-.data           0x00800100        0x0 load address 0x000007c6
+.data           0x00800100        0x0 load address 0x0000077e
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -755,36 +766,28 @@ END GROUP
                 0x00800100                _edata = .
                 0x00800100                PROVIDE (__data_end, .)
 
-.bss            0x00800100       0x2e
+.bss            0x00800100       0x28
                 0x00800100                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
- .bss.echo_duration
-                0x00800100        0x4 nieuwe_distance.o
-                0x00800100                echo_duration
  .bss.echo_start
-                0x00800104        0x4 nieuwe_distance.o
-                0x00800104                echo_start
+                0x00800100        0x4 nieuwe_distance.o
+                0x00800100                echo_start
  .bss.Timer0_counter
-                0x00800108        0x1 nieuwe_distance.o
-                0x00800108                Timer0_counter
- .bss.is_measuring
-                0x00800109        0x1 nieuwe_distance.o
-                0x00800109                is_measuring
+                0x00800104        0x1 nieuwe_distance.o
+                0x00800104                Timer0_counter
  *(COMMON)
- COMMON         0x0080010a       0x23 AVR_TTC_scheduler.o
-                0x0080010a                SCH_tasks_G
- COMMON         0x0080012d        0x1 nieuwe_distance.o
-                0x0080012d                distance
-                0x0080012e                PROVIDE (__bss_end, .)
-                0x000007c6                __data_load_start = LOADADDR (.data)
-                0x000007c6                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00800105       0x23 AVR_TTC_scheduler.o
+                0x00800105                SCH_tasks_G
+                0x00800128                PROVIDE (__bss_end, .)
+                0x0000077e                __data_load_start = LOADADDR (.data)
+                0x0000077e                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x0080012e        0x0
+.noinit         0x00800128        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x0080012e                _end = .
+                0x00800128                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -854,87 +857,87 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000      0x1a8
+.debug_aranges  0x00000000      0x1b8
  *(.debug_aranges)
  .debug_aranges
                 0x00000000       0x48 AVR_TTC_scheduler.o
  .debug_aranges
-                0x00000048       0x40 main.o
+                0x00000048       0x50 main.o
  .debug_aranges
-                0x00000088       0x58 nieuwe_distance.o
+                0x00000098       0x58 nieuwe_distance.o
  .debug_aranges
-                0x000000e0       0x40 pinIO.o
+                0x000000f0       0x40 pinIO.o
  .debug_aranges
-                0x00000120       0x50 sensorIO.o
+                0x00000130       0x50 sensorIO.o
  .debug_aranges
-                0x00000170       0x38 serialConnection.o
+                0x00000180       0x38 serialConnection.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x18f3
+.debug_info     0x00000000     0x192c
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x5f4 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_info    0x000005f4      0x259 AVR_TTC_scheduler.o
- .debug_info    0x0000084d      0x365 main.o
- .debug_info    0x00000bb2      0x537 nieuwe_distance.o
- .debug_info    0x000010e9      0x15e pinIO.o
- .debug_info    0x00001247      0x5a5 sensorIO.o
- .debug_info    0x000017ec      0x107 serialConnection.o
+ .debug_info    0x0000084d      0x3bf main.o
+ .debug_info    0x00000c0c      0x516 nieuwe_distance.o
+ .debug_info    0x00001122      0x15e pinIO.o
+ .debug_info    0x00001280      0x5a5 sensorIO.o
+ .debug_info    0x00001825      0x107 serialConnection.o
 
-.debug_abbrev   0x00000000      0xd3d
+.debug_abbrev   0x00000000      0xd5e
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x5a2 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_abbrev  0x000005a2      0x181 AVR_TTC_scheduler.o
- .debug_abbrev  0x00000723      0x124 main.o
- .debug_abbrev  0x00000847      0x1de nieuwe_distance.o
- .debug_abbrev  0x00000a25       0xbd pinIO.o
- .debug_abbrev  0x00000ae2      0x193 sensorIO.o
- .debug_abbrev  0x00000c75       0xc8 serialConnection.o
+ .debug_abbrev  0x00000723      0x15f main.o
+ .debug_abbrev  0x00000882      0x1c4 nieuwe_distance.o
+ .debug_abbrev  0x00000a46       0xbd pinIO.o
+ .debug_abbrev  0x00000b03      0x193 sensorIO.o
+ .debug_abbrev  0x00000c96       0xc8 serialConnection.o
 
-.debug_line     0x00000000      0xd4c
+.debug_line     0x00000000      0xd73
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x133 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_line    0x00000133      0x220 AVR_TTC_scheduler.o
- .debug_line    0x00000353      0x1f6 main.o
- .debug_line    0x00000549      0x28e nieuwe_distance.o
- .debug_line    0x000007d7      0x178 pinIO.o
- .debug_line    0x0000094f      0x292 sensorIO.o
- .debug_line    0x00000be1      0x16b serialConnection.o
+ .debug_line    0x00000353      0x217 main.o
+ .debug_line    0x0000056a      0x28e nieuwe_distance.o
+ .debug_line    0x000007f8      0x178 pinIO.o
+ .debug_line    0x00000970      0x298 sensorIO.o
+ .debug_line    0x00000c08      0x16b serialConnection.o
 
-.debug_frame    0x00000000      0x3ac
+.debug_frame    0x00000000      0x3e0
  *(.debug_frame)
  .debug_frame   0x00000000       0xe0 AVR_TTC_scheduler.o
- .debug_frame   0x000000e0       0x64 main.o
- .debug_frame   0x00000144      0x124 nieuwe_distance.o
- .debug_frame   0x00000268       0x64 pinIO.o
- .debug_frame   0x000002cc       0x8c sensorIO.o
- .debug_frame   0x00000358       0x54 serialConnection.o
+ .debug_frame   0x000000e0       0x84 main.o
+ .debug_frame   0x00000164      0x138 nieuwe_distance.o
+ .debug_frame   0x0000029c       0x64 pinIO.o
+ .debug_frame   0x00000300       0x8c sensorIO.o
+ .debug_frame   0x0000038c       0x54 serialConnection.o
 
-.debug_str      0x00000000      0x6ad
+.debug_str      0x00000000      0x6c7
  *(.debug_str)
  .debug_str     0x00000000      0x208 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_str     0x00000208      0x215 AVR_TTC_scheduler.o
                                 0x249 (size before relaxing)
- .debug_str     0x0000041d       0xfa main.o
-                                0x27d (size before relaxing)
- .debug_str     0x00000517       0xc3 nieuwe_distance.o
-                                0x2c1 (size before relaxing)
- .debug_str     0x000005da       0x28 pinIO.o
+ .debug_str     0x0000041d       0xee main.o
+                                0x2a6 (size before relaxing)
+ .debug_str     0x0000050b       0xdc nieuwe_distance.o
+                                0x2b4 (size before relaxing)
+ .debug_str     0x000005e7       0x29 pinIO.o
                                 0x1db (size before relaxing)
- .debug_str     0x00000602       0x68 sensorIO.o
+ .debug_str     0x00000610       0x74 sensorIO.o
                                 0x287 (size before relaxing)
- .debug_str     0x0000066a       0x43 serialConnection.o
+ .debug_str     0x00000684       0x43 serialConnection.o
                                 0x1d3 (size before relaxing)
 
-.debug_loc      0x00000000      0xbdb
+.debug_loc      0x00000000      0xc24
  *(.debug_loc)
  .debug_loc     0x00000000      0x244 AVR_TTC_scheduler.o
  .debug_loc     0x00000244       0x90 main.o
- .debug_loc     0x000002d4      0x2a7 nieuwe_distance.o
- .debug_loc     0x0000057b      0x265 pinIO.o
- .debug_loc     0x000007e0      0x3ad sensorIO.o
- .debug_loc     0x00000b8d       0x4e serialConnection.o
+ .debug_loc     0x000002d4      0x2f0 nieuwe_distance.o
+ .debug_loc     0x000005c4      0x265 pinIO.o
+ .debug_loc     0x00000829      0x3ad sensorIO.o
+ .debug_loc     0x00000bd6       0x4e serialConnection.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -954,14 +957,14 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000      0x148
+.debug_ranges   0x00000000      0x158
  *(.debug_ranges)
  .debug_ranges  0x00000000       0x38 AVR_TTC_scheduler.o
- .debug_ranges  0x00000038       0x30 main.o
- .debug_ranges  0x00000068       0x48 nieuwe_distance.o
- .debug_ranges  0x000000b0       0x30 pinIO.o
- .debug_ranges  0x000000e0       0x40 sensorIO.o
- .debug_ranges  0x00000120       0x28 serialConnection.o
+ .debug_ranges  0x00000038       0x40 main.o
+ .debug_ranges  0x00000078       0x48 nieuwe_distance.o
+ .debug_ranges  0x000000c0       0x30 pinIO.o
+ .debug_ranges  0x000000f0       0x40 sensorIO.o
+ .debug_ranges  0x00000130       0x28 serialConnection.o
 
 .debug_macro
  *(.debug_macro)

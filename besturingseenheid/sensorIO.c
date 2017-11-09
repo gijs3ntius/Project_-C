@@ -44,7 +44,8 @@ float temperatureInC(uint16_t analog){
 
 
 uint8_t getTemp(){
-	uint8_t tempInC = temperatureInC(analog_read(0)); // lees ADC uit (A0) en maak er volt van en dan Celsius
+	ADC = 0x00;
+	uint8_t tempInC = temperatureInC(analog_read(3)); // lees ADC uit (A0) en maak er volt van en dan Celsius
 	return tempInC;
 }
 
