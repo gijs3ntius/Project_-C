@@ -87,13 +87,42 @@ void analog_config() {
 	/* bron code: http://maxembedded.com/2011/06/the-adc-of-the-avr/  */
 }
 
+
+
+uint16_t analog_read(uint8_t ) {
+	
+	ADCSRA |= (1<<ADEN);
+	
+	ADMUX |= (1<<REFS0);
+
+	ADCSRA |= (1<<ADPS0)|(1<<ADPS1)|(1<<ADPS2);
+	
+	ADMUX = (ADMUX & 0xF8) & ~(1 << MUX0);
+	
+	
+	
+
+	ADCSRA |= (1<<ADSC);
+	
+
+	loop_until_bit_is_set(ADCSRA,ADSC);
+	ADCSRA &= ~(1<<ADEN);
+	
+	return (ADC);
+	
+}
+
+
+
+
+
 /*
  * Gets a value from an analog pin
  * TODO before reading setup the ADMUX and ADCSRA registers
  */
 uint16_t analog_read0() {
 	
-	ADCSRA |= (0<<ADEN);
+	ADCSRA |= (1<<ADEN);
 	
 	ADMUX |= (1<<REFS0); 
 
@@ -102,12 +131,13 @@ uint16_t analog_read0() {
 	ADMUX = (ADMUX & 0xF8) & ~(1 << MUX0);
 	
 	
-	ADCSRA |= (1<<ADEN);
+	
 
 	ADCSRA |= (1<<ADSC);
 	
 
 	loop_until_bit_is_set(ADCSRA,ADSC);
+	ADCSRA &= ~(1<<ADEN);
 	
 	return (ADC);
 	
@@ -158,6 +188,8 @@ uint16_t analog_read1() {
 	low = ADCL; // put ADCL in low
 	
 	return (ADCH << 8) | low; // return value
+	
+}
 	
 	*/
 	/*

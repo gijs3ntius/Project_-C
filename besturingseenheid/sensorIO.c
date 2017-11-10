@@ -58,7 +58,6 @@ uint8_t getLight(){
 	// lees A1 uit, met een shift /4 
 	// Je krijgt een 10 bits getal. We schuiven hem twee keer naar rechts zodat je 8 bits hebt.
 	// Je verliest hier alleen de waarden 0-3 mee. Voor dit project niet erg.
-	
 	return light;
 }
 

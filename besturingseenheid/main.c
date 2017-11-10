@@ -67,12 +67,12 @@ int main(void)
 	
 	SCH_Init_T1(); // stel de scheduler in
 	
-	SCH_Add_Task(Temperature, 0, 1000); // temp zit op A0.
+	//SCH_Add_Task(Temperature, 0, 100); // temp zit op A0.
 	// 200 = 40000 dus om de 40 seconden
 	
 	//SCH_Add_Task(testKutSchedular,0, 200);
 
-	SCH_Add_Task(Light, 500, 1000); // Voeg taken toe aan de scheduler Light zit op A1.
+	SCH_Add_Task(Light, 50, 100); // Voeg taken toe aan de scheduler Light zit op A1.
 	// 200 = 30000 dus om de 30 seconden
 	// om de 60 seconden deze waarden naar centrale sturen.
 	
