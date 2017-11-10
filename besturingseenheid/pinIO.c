@@ -80,7 +80,10 @@ void analog_config() {
  * Gets a value from an analog pin
  */
 uint16_t analog_read(uint8_t adcx) {
-	ADMUX = (ADMUX & 0x1B) | (adcx & 0x05); // mask the last three bits from admux
+	//adcx &= 0b00000101; 
+	//ADMUX = (ADMUX & 0xF8)|adcx;
+	
+	ADMUX = (ADMUX & 0xFB) | (adcx & 0x07); // mask the last three bits from admux
 	ADCSRA |= (1<<ADSC); // analog read is started
 	loop_until_bit_is_set(ADCSRA,ADSC);
 	return (ADCH | ADCL); //return adc

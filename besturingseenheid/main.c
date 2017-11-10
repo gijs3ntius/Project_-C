@@ -17,19 +17,19 @@
 
 void Light(){
 	uint8_t command = 0b0001;
-	uint8_t data1 = getLight();
+	uint8_t data = getLight();
 	transmitSerial(command);
 	_delay_ms(50);
-	transmitSerial(data1);
+	transmitSerial(data);
 	_delay_ms(10);
 }
 
 void Temperature(){
 	uint8_t command = 0b0010;
-	uint8_t data2 = getTemp();
+	uint8_t data = getTemp();
 	transmitSerial(command);
 	_delay_ms(50);
-	transmitSerial(data2);
+	transmitSerial(data);
 	_delay_ms(10);
 
 }
@@ -60,7 +60,7 @@ int main(void)
 	//setUpLights();
 	initSerial();
 	SCH_Init_T1(); // stel de scheduler in
-	SCH_Add_Task(Temperature, 0, 200); // temp zit op A1.
+	//SCH_Add_Task(Temperature, 0, 200); // temp zit op A1.
 	SCH_Add_Task(Light, 100, 200); // Voeg taken toe aan de scheduler Light zit op A0.
 	//SCH_Add_Task(Distance, 0, 60); // je wilt 60 ms wachten totdat je opnieuw meet. Dit staat in de datasheet
 	//SCH_Add_Task(turnOnLights2, 0, 100);
