@@ -4,7 +4,7 @@ from enums import Command
 import time
 import re
 
-class SerialControler:
+class SerialController:
     def __init__(self, GUI):
         self.__paused__ = False
         self.control_units = {}
@@ -55,7 +55,7 @@ class SerialControler:
 
     def send_command(self, com_port, command, content):
         self.__pause__()
-        if command is Command.MAX_ROL_OUT or command is Command.MAX_ROL_OUT:
+        if command is Command.MAX_ROL_IN or command is Command.MAX_ROL_OUT:
             self.control_units[com_port].send(command, content >> 2)  # shift the value becaue content can vary 2 -> 400
         else:
             self.control_units[com_port].send(command, content)
@@ -70,15 +70,12 @@ if __name__ == '__main__':
     test = 0  # this would be the GUI normally
     sl = SerialControler(test)
     sl.connect_ports()
-    print(sl.getConnectedDevices())
-    sl.__debug_read_data__()
+    # sl.__debug_read_data__()
     number = 0
     while True:
         number += 1
-        print(number)
         if number % 7 == 0:
             sl.connect_ports()
-            print(sl.getConnectedDevices())
             time.sleep(0.1)
         # sl.debug_read_data()
         sl.read_ports()
