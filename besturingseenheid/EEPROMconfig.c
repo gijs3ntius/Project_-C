@@ -25,7 +25,7 @@ const minRoll_address = 0x02;
 
 uint8_t giveID(){
 	// Is er nog geen ID gegeven?
-	if (eeprom_read_byte(ID_address) == '')
+	if (eeprom_read_byte(ID_address) == 0)
 	{
 		uint8_t randVal = 1000; // Ik wil dat elke ardiuno een vier cijfer ID krijgt
 		randVal += rand() % 9000; // een willekeurig getal tussen 0 en 8999

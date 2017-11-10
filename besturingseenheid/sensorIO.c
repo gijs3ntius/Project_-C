@@ -11,58 +11,20 @@
  */ 
 
 #include "pinIO.h"
+#include <avr/io.h>
 #include <util/delay.h>
+#include <avr/interrupt.h>
+//#inculde distance_sensor
 
-const int trigPin = 9; // const
-const int echoPin = 10; // const
+#define redLight 11
+#define greenLight 12
+#define yellowLight 13
 
+#define HIGH 1
+#define LOW 0
+#define IN 0
+#define OUT 1
 
-long duration;
-int dis;
-
-
-/* Ultrasenoorsensor 
-*********************************************************************************************************************/
-
-void setUpUltra(){
-	digital_config(trigPin, OUT); // trigger pin wordt output
-	digital_config(echoPin, IN); // echo pin is input
-}
-
-void startPulse(){
-	digital_write(trigPin, LOW); // zorg ervoor dat trigger leeg is!
-	_delay_ms(2);
-	
-	digital_write(trigPin, HIGH);
-	_delay_us(10);
-	digital_write(trigPin, LOW);
-	
-}
-
-long readPulse(){
-	duration = digital_read(echoPin); // pulse in maakt gebruik van timer, zelf een timer gebruiken om dit te regelen.
-	return duration; // eeprom gebruiken for ID bijhouden Settings op je Arduino bijhouden
-	// ardiuno moet zonder centrale door kunnen werken. Ardiuno 1 is voor zonnescherm 2. Ardiuno 2 is voor zonnescherm 2. 
-	//Informatie weergeven in python, instellingen erin zetten, handmatig scherm omhoog of omlaag doen(vanuit centrale).
-	// elke ardiuno is een klasse in centrale python.
-}
-
-int distance(int duration_){
-	dis = (duration_ * 0.034) / 2;
-	return dis;
-}
-
-
-/* dit is een soort van de main functie. Hierdoor krijg je de juiste afstand terug. Dit in scheduler gooien */
-uint8_t getDistance(){
-	uint8_t actDis;
-	startPulse();
-	actDis = readPulse();
-	dis = distance(actDis);
-	
-	return dis;
-	
-}
 
 /* Temperatuursensor
 * verander het 10 bits getal in het voltage 
@@ -81,8 +43,8 @@ float temperatureInC(uint16_t analog){
 }
 
 
-uint8_t getTemp(){
-	uint8_t tempInC = temperatureInC(analog_read(0)); // lees ADC uit (A0) en maak er volt van en dan Celsius
+uint8_t getTemp(int pin){
+	uint8_t tempInC = temperatureInC(analog_read(pin)); // lees ADC uit (A0) en maak er volt van en dan Celsius
 	return tempInC;
 }
 
@@ -91,13 +53,72 @@ uint8_t getTemp(){
 *********************************************************************************************************************/
 
 
-uint8_t getLight(){
-	uint8_t light = (analog_read(1)>>2); 
+uint8_t getLight(int pin){
+	uint8_t light = (analog_read(pin) >> 2); 
 	// lees A1 uit, met een shift /4 
 	// Je krijgt een 10 bits getal. We schuiven hem twee keer naar rechts zodat je 8 bits hebt.
 	// Je verliest hier alleen de waarden 0-3 mee. Voor dit project niet erg.
-	
 	return light;
 }
 
+/* Uit en inrol lampjes
+*******************************************************************************************************************/
+
+
+void setUpLights(){
+	digital_config(redLight, OUT);
+	digital_config(greenLight, OUT);
+	digital_config(yellowLight, OUT);
+}
+
+
+uint8_t rolledInOrOut(uint8_t command){
+	uint8_t i = 0;
+	
+	if (command == 2)
+	{
+		digital_write(redLight, LOW);
+		digital_write(greenLight, HIGH);
+		digital_write(yellowLight, LOW);
+		
+		for (i = 0; i < 10; i++)
+		{
+			digital_write(yellowLight, HIGH);
+			_delay_ms(5000);
+			digital_write(yellowLight, LOW);
+			_delay_ms(5000);
+		}
+	}
+	
+	if (command == 1)
+	{
+		digital_write(greenLight, LOW);
+		digital_write(redLight, HIGH);
+		digital_write(yellowLight, LOW);
+		
+		for (i = 0; i < 10; i++){
+			digital_write(yellowLight, HIGH);
+			_delay_ms(5000);
+			digital_write(yellowLight, LOW);
+			_delay_ms(5000);	
+		}
+	}
+}
+
+/*Deze functie is er puur voor een simulatie. Om te testen */
+void turnOnLights(){
+	
+	rolledInOrOut(1);
+	_delay_ms(10000);
+	rolledInOrOut(2);
+	
+}
+
+
+
+void resetLights(){
+	digital_write(redLight, LOW);
+	digital_write(greenLight, LOW);
+	digital_write(yellowLight, LOW);
+}
 
