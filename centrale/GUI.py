@@ -22,11 +22,11 @@ class Window(Frame):
         self.master = master
         self.listener = None
         self.graphType = True
-        self.frame1 = Frame(master)
+        self.frame1 = Frame(master, bg='slategray2')
         self.frame1.grid(row=0, column=0)
-        self.frame2 = Frame(master)
+        self.frame2 = Frame(master, bg='slategray2')
         self.frame2.grid(row=0, column=1, sticky=NW)
-        self.frame3 = Frame(master)
+        self.frame3 = Frame(master, bg='slategray2')
         self.frame3.grid(row=0, column=6, sticky=NW)
 
     """
@@ -168,49 +168,72 @@ class Window(Frame):
             app.plotCelc()
 
     """
-    This function adds the buttons to reset the connection,
-    set the program to roll out/roll in when a value is met (automatic),
-    set the program to only roll out/ roll in when a button is pushed manually
+    This function adds the buttons and entries for the min and max temp values.
     """
 
-    def modes(self):
-        fixer1 = Button(self.frame2, text='Manual', pady=37, padx=40, bg='gray75', state=DISABLED)  # to fix the layout of GUI zzz
-        fixer1.grid(row=2, column=1, sticky=W)
+    def tempset(self):
+        mintemp_entry = Entry(self.frame3, width=20)
+        mintemp_entry.insert(0, 'Enter min temp')
+        mintemp_entry.grid(row=4, column=1, sticky=E)
 
-        fixer2 = Button(self.frame2, text='Automatic', pady=37, padx=32, bg='gray75', state=DISABLED)  # to fix the layout of the GUI zzz
-        fixer2.grid(row=3, column=1, sticky=W)
-        # roll_out.grid(row=0, column=1, sticky=SW) used to position bottomleft
+        maxtemp_entry = Entry(self.frame3, width=20)
+        maxtemp_entry.insert(0, 'Enter max temp')
+        maxtemp_entry.grid(row=5, column=1, sticky=E)
 
-        mintemp_entry = Entry(self.frame2, width=20)
-        mintemp_entry.insert(0, 'Enter min temperature')
-        mintemp_entry.grid(row=2, column=1, sticky=W)
+        submit_mintemp = Button(self.frame3, text='Submit', pady=20, padx=20, bg='gray75')
+        submit_mintemp.grid(row=4, column=2, columnspan=3, sticky=W)
 
-        maxtemp_entry = Entry(self.frame2, width=20)
-        maxtemp_entry.insert(0, 'Enter max temperature')
-        maxtemp_entry.grid(row=3, column=1, sticky=W)
+        submit_maxtemp = Button(self.frame3, text='Submit', pady=20, padx=20, bg='gray75')
+        submit_maxtemp.grid(row=5, column=2, columnspan=3, sticky=W)
 
-        submit_mintemp = Button(self.frame2, text='Submit max temp', pady=37, padx=20, bg='gray75')
-        submit_mintemp.grid(row=2, column=1, sticky=S)
+    """
+    This function adds the buttons and entries for the min and max light values.
+    """
 
-        submit_maxtemp = Button(self.frame2, text='Submit min temp', pady=37, padx=22, bg='gray75')
-        submit_maxtemp.grid(row=3, column=1, sticky=S)
+    def lightset(self):
+        minlight_entry = Entry(self.frame3, width=20)
+        minlight_entry.insert(0, 'Enter min intensity')
+        minlight_entry.grid(row=2, column=1, sticky=E)
 
+        maxlight_entry = Entry(self.frame3, width=20)
+        maxlight_entry.insert(0, 'Enter max intensity')
+        maxlight_entry.grid(row=3, column=1, sticky=E)
 
+        submit_minlight = Button(self.frame3, text='Submit', pady=20, padx=20, bg='gray75')
+        submit_minlight.grid(row=2, column=2, columnspan=3, sticky=W)
+
+        submit_maxlight = Button(self.frame3, text='Submit', pady=20, padx=20, bg='gray75')
+        submit_maxlight.grid(row=3, column=2, columnspan=3, sticky=W)
+
+    """
+    This function adds the buttons and entries to determine the max and min values for roll in/roll out
+    """
+
+    def rollset(self):
+        minroll_entry = Entry(self.frame2, width=20)
+        minroll_entry.insert(0, 'Enter min roll distance')
+        minroll_entry.grid(row=3, column=1, sticky=W)
+
+        maxroll_entry = Entry(self.frame2, width=20)
+        maxroll_entry.insert(0, 'Enter max roll distance')
+        maxroll_entry.grid(row=4, column=1, sticky=W)
+
+        submit_minroll = Button(self.frame2, text='Submit', pady=37, padx=20, bg='gray75')
+        submit_minroll.grid(row=3, column=1, columnspan=3, sticky=S)
+
+        submit_maxroll = Button(self.frame2, text='Submit', pady=33, padx=20, bg='gray75')
+        submit_maxroll.grid(row=4, column=1, columnspan=3, sticky=S)
+
+    """
+    This function adds the buttons to roll in/roll out and refresh the connection.
+    """
 
     def settings(self):
-        roll_in = Button(self.frame3, text='Roll in', padx=35, pady=30 ,bg='gray75')
-        roll_in.grid(row=0, column=3, sticky=NW)
+        roll_in = Button(self.frame2, text='Roll in', padx=35, pady=39, bg='gray75')
+        roll_in.grid(row=3, column=1, sticky=E)
 
-        roll_out = Button(self.frame3, text='Roll out', padx=31, pady=30 ,bg='gray75')
-        roll_out.grid(row=0, column=4, sticky=NW)
-
-        refresh = Button(self.frame3, text='Refresh', padx=88, pady=10, bg='gray75')
-        refresh.grid(row=1, column=3, columnspan=2, sticky=NW)
-
-
-
-
-
+        roll_out = Button(self.frame2, text='Roll out', padx=31, pady=35, bg='gray75')
+        roll_out.grid(row=4, column=1, sticky=E)
 
 
 
@@ -225,6 +248,8 @@ if __name__ == '__main__':
     app = Window(root)
     app.first_window()
     app.plotCelc()
-    app.modes()
+    app.tempset()
+    app.lightset()
+    app.rollset()
     app.settings()
     root.mainloop()
