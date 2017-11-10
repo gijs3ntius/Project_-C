@@ -16,8 +16,13 @@
 
 
 void Light(){
+<<<<<<< HEAD
 	uint8_t command = 0b0001;
 	uint8_t data = getLight();
+=======
+	uint8_t command = 0b00010001;
+	uint8_t data1 = getLight(2);
+>>>>>>> development
 	transmitSerial(command);
 	_delay_ms(50);
 	transmitSerial(data);
@@ -25,8 +30,13 @@ void Light(){
 }
 
 void Temperature(){
+<<<<<<< HEAD
 	uint8_t command = 0b0010;
 	uint8_t data = getTemp();
+=======
+	uint8_t command = 0b00010010;
+	uint8_t data2 = getTemp(1);
+>>>>>>> development
 	transmitSerial(command);
 	_delay_ms(50);
 	transmitSerial(data);
@@ -52,13 +62,13 @@ void turnOnLights2(){
 
 int main(void)
 {
-
+	initSerial();
 	analog_config();
 	//setUpUltra(); // voor de afstand
 	//setUpInterrupt(); // voor de afstand
 	//setUpTimer0(); // voor de afstand
 	//setUpLights();
-	initSerial();
+	_delay_ms(1000);
 	SCH_Init_T1(); // stel de scheduler in
 	//SCH_Add_Task(Temperature, 0, 200); // temp zit op A1.
 	SCH_Add_Task(Light, 100, 200); // Voeg taken toe aan de scheduler Light zit op A0.

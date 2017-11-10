@@ -74,17 +74,25 @@ void analog_config() {
 	ADMUX = 0x00; // reset ADC
 	ADMUX |= (1<<REFS0); // sets reference voltage
 	ADCSRA |= (1<<ADEN)|(1<<ADPS0)|(1<<ADPS1)|(1<<ADPS2); // enable ADC, select ADC prescaler with ADPS
+	transmitSerial(0b11110000);
+	transmitSerial(ADCSRA);
 }
 
 /*
  * Gets a value from an analog pin
  */
 uint16_t analog_read(uint8_t adcx) {
+<<<<<<< HEAD
 	//adcx &= 0b00000101; 
 	//ADMUX = (ADMUX & 0xF8)|adcx;
 	
 	ADMUX = (ADMUX & 0xFB) | (adcx & 0x07); // mask the last three bits from admux
+=======
+	ADMUX = (ADMUX & 0xF8) | (adcx & 0x07); // mask the last three bits from admux
+	//transmitSerial(0b11110000);
+	//transmitSerial(ADMUX);
+>>>>>>> development
 	ADCSRA |= (1<<ADSC); // analog read is started
-	loop_until_bit_is_set(ADCSRA,ADSC);
-	return (ADCH | ADCL); //return adc
+	loop_until_bit_is_set(ADCSRA, ADSC);
+	return (ADC); //return adc
 }
