@@ -25,7 +25,7 @@ class SerialListener:
                     self.control_units[port[0]] = SerialConnection(baudrate=19200, port=port[0])
 
     def read_ports(self):
-        data = []
+        data_list = []
         for device in self.control_units.values():
             try:
                 data = device.receive()
@@ -37,9 +37,19 @@ class SerialListener:
             content = int.from_bytes(data[1], byteorder='big')
             control_unit_id = header >> 4  # SEE DATAPROTOCOL
             sensor = header & 0x0F  # SEE DATAPROTOCOL
-            data.append([control_unit_id, sensor, content])
-            print(control_unit_id, "type:", sensor, "value:", content)  # for debugging purposes
-        return data
+            data_list.append([control_unit_id, sensor, content])
+            # print(control_unit_id, "type:", sensor, "value:", content)  # for debugging purposes
+        return data_list
+
+    def debug_read_data(self):
+        for device in self.control_units.values():
+            try:
+                data = device.receive()
+            except Exception as e:
+                continue  # break out of the for to update the com_ports
+            if data == 0:  # if it is 0 something went wrong with receiving the data
+                continue  # continue to check the next control unit
+            print("{0:b}".format(int.from_bytes(data[0], byteorder='big')), ":", "{0:b}".format(int.from_bytes(data[1], byteorder='big')), "\n")
 
     def pause(self):
         self.paused = True
@@ -62,6 +72,8 @@ if __name__ == '__main__':
     sl = SerialListener(test)
     sl.connect_ports()
     print(sl.getConnectedDevices())
+    sl.debug_read_data()
     while True:
+        # sl.debug_read_data()
         sl.read_ports()
         time.sleep(0.1)
