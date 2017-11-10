@@ -1,4 +1,6 @@
 from tkinter import *
+from Project.enums import *
+from Project.controlers import SerialController
 
 """
 Version: 1.0.2
@@ -22,6 +24,7 @@ class Window(Frame):
         self.master = master
         self.listener = None
         self.graphType = True
+        self.controller = SerialController()
         self.frame1 = Frame(master, bg='slategray2')
         self.frame1.grid(row=0, column=0)
         self.frame2 = Frame(master, bg='slategray2')
@@ -172,18 +175,18 @@ class Window(Frame):
     """
 
     def tempset(self):
-        mintemp_entry = Entry(self.frame3, width=20)
-        mintemp_entry.insert(0, 'Enter min temp')
-        mintemp_entry.grid(row=4, column=1, sticky=E)
+        self.mintemp_entry = Entry(self.frame3, width=20)
+        self.mintemp_entry.insert(0, 'Enter min temp')
+        self.mintemp_entry.grid(row=4, column=1, sticky=E)
 
-        maxtemp_entry = Entry(self.frame3, width=20)
-        maxtemp_entry.insert(0, 'Enter max temp')
-        maxtemp_entry.grid(row=5, column=1, sticky=E)
+        self.maxtemp_entry = Entry(self.frame3, width=20)
+        self.maxtemp_entry.insert(0, 'Enter max temp')
+        self.maxtemp_entry.grid(row=5, column=1, sticky=E)
 
-        submit_mintemp = Button(self.frame3, text='Submit', pady=20, padx=20, bg='gray75')
+        submit_mintemp = Button(self.frame3, text='Submit', pady=20, padx=20, bg='gray75', command=self.grabmintemp)
         submit_mintemp.grid(row=4, column=2, columnspan=3, sticky=W)
 
-        submit_maxtemp = Button(self.frame3, text='Submit', pady=20, padx=20, bg='gray75')
+        submit_maxtemp = Button(self.frame3, text='Submit', pady=20, padx=20, bg='gray75', command=self.grabmaxtemp)
         submit_maxtemp.grid(row=5, column=2, columnspan=3, sticky=W)
 
     """
@@ -191,18 +194,18 @@ class Window(Frame):
     """
 
     def lightset(self):
-        minlight_entry = Entry(self.frame3, width=20)
-        minlight_entry.insert(0, 'Enter min intensity')
-        minlight_entry.grid(row=2, column=1, sticky=E)
+        self.minlight_entry = Entry(self.frame3, width=20)
+        self.minlight_entry.insert(0, 'Enter min intensity')
+        self.minlight_entry.grid(row=2, column=1, sticky=E)
 
-        maxlight_entry = Entry(self.frame3, width=20)
-        maxlight_entry.insert(0, 'Enter max intensity')
-        maxlight_entry.grid(row=3, column=1, sticky=E)
+        self.maxlight_entry = Entry(self.frame3, width=20)
+        self.maxlight_entry.insert(0, 'Enter max intensity')
+        self.maxlight_entry.grid(row=3, column=1, sticky=E)
 
-        submit_minlight = Button(self.frame3, text='Submit', pady=20, padx=20, bg='gray75')
+        submit_minlight = Button(self.frame3, text='Submit', pady=20, padx=20, bg='gray75', command=self.grabminlight)
         submit_minlight.grid(row=2, column=2, columnspan=3, sticky=W)
 
-        submit_maxlight = Button(self.frame3, text='Submit', pady=20, padx=20, bg='gray75')
+        submit_maxlight = Button(self.frame3, text='Submit', pady=20, padx=20, bg='gray75', command=self.grabmaxlight)
         submit_maxlight.grid(row=3, column=2, columnspan=3, sticky=W)
 
     """
@@ -210,18 +213,18 @@ class Window(Frame):
     """
 
     def rollset(self):
-        minroll_entry = Entry(self.frame2, width=20)
-        minroll_entry.insert(0, 'Enter min roll distance')
-        minroll_entry.grid(row=3, column=1, sticky=W)
+        self.minroll_entry = Entry(self.frame2, width=20)
+        self.minroll_entry.insert(0, 'Enter min roll distance')
+        self.minroll_entry.grid(row=3, column=1, sticky=W)
 
-        maxroll_entry = Entry(self.frame2, width=20)
-        maxroll_entry.insert(0, 'Enter max roll distance')
-        maxroll_entry.grid(row=4, column=1, sticky=W)
+        self.maxroll_entry = Entry(self.frame2, width=20)
+        self.maxroll_entry.insert(0, 'Enter max roll distance')
+        self.maxroll_entry.grid(row=4, column=1, sticky=W)
 
-        submit_minroll = Button(self.frame2, text='Submit', pady=37, padx=20, bg='gray75')
+        submit_minroll = Button(self.frame2, text='Submit', pady=37, padx=20, bg='gray75', command=self.grabminroll)
         submit_minroll.grid(row=3, column=1, columnspan=3, sticky=S)
 
-        submit_maxroll = Button(self.frame2, text='Submit', pady=33, padx=20, bg='gray75')
+        submit_maxroll = Button(self.frame2, text='Submit', pady=33, padx=20, bg='gray75', command=self.grabmaxroll)
         submit_maxroll.grid(row=4, column=1, columnspan=3, sticky=S)
 
     """
@@ -229,12 +232,58 @@ class Window(Frame):
     """
 
     def settings(self):
-        roll_in = Button(self.frame2, text='Roll in', padx=35, pady=39, bg='gray75')
-        roll_in.grid(row=3, column=1, sticky=E)
+        self.roll_in = Button(self.frame2, text='Roll in', padx=35, pady=39, bg='gray75')
+        self.roll_in.grid(row=3, column=1, sticky=E)
 
-        roll_out = Button(self.frame2, text='Roll out', padx=31, pady=35, bg='gray75')
-        roll_out.grid(row=4, column=1, sticky=E)
+        self.roll_out = Button(self.frame2, text='Roll out', padx=31, pady=35, bg='gray75')
+        self.roll_out.grid(row=4, column=1, sticky=E)
 
+    """
+    These functions grab the input and sends the input to the Arduino
+    along with the corresponding command.
+    """
+
+    def grabmaxtemp(self):
+        maxtemp = self.maxtemp_entry.get()
+        self.controller.send_command('COM4', Command.TEMP_ROL_OUT, maxtemp)  # sends the maxtemp
+        #print(maxtemp)
+
+    def grabmintemp(self):
+        mintemp = self.mintemp_entry.get()
+        self.controller.send_command('COM4', Command.TEMP_ROL_IN, mintemp)  # sends the mintemp
+        #print(mintemp)
+
+    def grabmaxlight(self):
+        maxlight = self.maxlight_entry.get()
+        self.controller.send_command('COM4', Command.LIGHT_ROL_OUT, maxlight)  # sends the maxlight
+        #print(maxlight)
+
+    def grabminlight(self):
+        minlight = self.minlight_entry.get()
+        self.controller.send_command('COM4', Command.LIGHT_ROL_IN, minlight)  # sends the minlight
+        #print(minlight)
+
+    def grabmaxroll(self):
+        maxroll = self.maxroll_entry.get()
+        self.controller.send_command('COM4', Command.MAX_ROL_OUT, maxroll)  # sends the maxroll
+        #print(maxroll)
+
+    def grabminroll(self):
+        minroll = self.minroll_entry.get()
+        self.controller.send_command('COM4', Command.MIN_ROL_OUT, minroll)  # sends the minroll
+        #print(minroll)
+
+    """
+    These functions will send the command to roll out/roll in to the Arduino when the button is pressed
+    """
+
+    #def rollout(self):
+        #self.controller.send_command('COM4', Command.ROL_OUT)
+        #print('test')
+
+    #def rollin(self):
+        #self.controller.send_command('COM4', Command.ROL_IN)
+        #print('test')
 
 
 
