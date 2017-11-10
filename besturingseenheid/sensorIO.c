@@ -25,6 +25,8 @@
 #define IN 0
 #define OUT 1
 
+uint8_t rolledOut = 0;
+
 
 /* Temperatuursensor
 * verander het 10 bits getal in het voltage 
@@ -65,23 +67,25 @@ uint8_t getLight(int pin){
 *******************************************************************************************************************/
 
 
-void setUpLights(){
+void setUpLeds(){
 	digital_config(redLight, OUT);
 	digital_config(greenLight, OUT);
 	digital_config(yellowLight, OUT);
 }
 
 
-uint8_t rolledInOrOut(uint8_t command){
+
+void rolledInOrOut(uint8_t command, uint8_t maxOut){
 	uint8_t i = 0;
 	
-	if (command == 2)
+	if (rolledOut == 0 && command == 2)
 	{
+		rolledOut = 1;
 		digital_write(redLight, LOW);
 		digital_write(greenLight, HIGH);
 		digital_write(yellowLight, LOW);
 		
-		for (i = 0; i < 10; i++)
+		for (i = 0; i < maxOut; i++)
 		{
 			digital_write(yellowLight, HIGH);
 			_delay_ms(5000);
@@ -90,13 +94,14 @@ uint8_t rolledInOrOut(uint8_t command){
 		}
 	}
 	
-	if (command == 1)
+	if (rolledOut == 1 && command == 1)
 	{
+		rolledOut = 0;
 		digital_write(greenLight, LOW);
 		digital_write(redLight, HIGH);
 		digital_write(yellowLight, LOW);
 		
-		for (i = 0; i < 10; i++){
+		for (i = 0; i < maxOut; i++){
 			digital_write(yellowLight, HIGH);
 			_delay_ms(5000);
 			digital_write(yellowLight, LOW);
@@ -108,12 +113,11 @@ uint8_t rolledInOrOut(uint8_t command){
 /*Deze functie is er puur voor een simulatie. Om te testen */
 void turnOnLights(){
 	
-	rolledInOrOut(1);
+	rolledInOrOut(1, 10);
 	_delay_ms(10000);
-	rolledInOrOut(2);
+	rolledInOrOut(2, 10);
 	
 }
-
 
 
 void resetLights(){

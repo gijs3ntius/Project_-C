@@ -23,7 +23,7 @@ volatile int i=0;
 #define trigPin 0
 #define echoPin 3
 
-
+*/
 /* Ultrasenoorsensor
 *********************************************************************************************************************/
 /*
@@ -57,7 +57,7 @@ void startPulse(){
 	digital_write(trigPin, LOW);
 	
 }
-
+*/
 
 	/* dit is een soort van de main functie. Hierdoor krijg je de juiste afstand terug. Dit in scheduler gooien */
 	/*

@@ -1,5 +1,5 @@
 
-
+/*
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
@@ -24,10 +24,10 @@ volatile long echo_duration = 0;
 #define trigPin 5
 #define echoPin 6
 
-
+*/
 /* Ultrasenoorsensor
 *********************************************************************************************************************/
-
+/*
 void setUpUltra(){
 	digital_config(trigPin, OUT); // trigger pin wordt output
 	digital_config(echoPin, IN); // echo pin is input
@@ -74,9 +74,9 @@ uint8_t calcDistance(){
 	
 }
 
-
+*/
 /* dit is een soort van de main functie. Hierdoor krijg je de juiste afstand terug. Dit in scheduler gooien */
-	
+/*	
 uint8_t getDistance(){
 	
 		if (is_measuring == 0)
@@ -127,3 +127,4 @@ ISR(INT1_vect)
 	}
 }
 
+*/
