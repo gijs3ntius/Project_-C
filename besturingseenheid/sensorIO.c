@@ -44,7 +44,7 @@ float temperatureInC(uint16_t analog){
 
 
 uint8_t getTemp(){
-	uint8_t tempInC = temperatureInC(analog_read0()); // lees ADC uit (A0) en maak er volt van en dan Celsius
+	uint8_t tempInC = temperatureInC(analog_read(1)); // lees ADC uit (A0) en maak er volt van en dan Celsius
 	return tempInC;
 }
 
@@ -54,7 +54,7 @@ uint8_t getTemp(){
 
 
 uint8_t getLight(){
-	uint8_t light = (analog_read1()>>2); 
+	uint8_t light = (analog_read(0)>>2); 
 	// lees A1 uit, met een shift /4 
 	// Je krijgt een 10 bits getal. We schuiven hem twee keer naar rechts zodat je 8 bits hebt.
 	// Je verliest hier alleen de waarden 0-3 mee. Voor dit project niet erg.
