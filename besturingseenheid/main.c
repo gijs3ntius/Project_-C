@@ -53,7 +53,7 @@ void turnOnLights2(){
 int main(void)
 {
 
-	//analog_config();
+	analog_config();
 	//setUpUltra(); // voor de afstand
 	//setUpInterrupt(); // voor de afstand
 	//setUpTimer0(); // voor de afstand
