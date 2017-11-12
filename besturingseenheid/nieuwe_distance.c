@@ -1,8 +1,7 @@
 
-/*
 #include <avr/io.h>
 #include <util/delay.h>
-#include <avr/interrupt.h>
+#include "serialConnection.h"
 
 #define F_CPU 16E6			     // 16.0 Mhz clock
 
@@ -13,118 +12,38 @@
 
 // Delay between measures (on msec) , may occur problem if delay is short.Check datasheet
 
-volatile char is_measuring = 0;
-volatile uint8_t Timer0_counter = 0 ;
-volatile uint8_t distance;
+#define trigPin 8
+#define echoPin 9
 
-volatile long echo_start = 0;
-volatile long echo_duration = 0;
+uint8_t pulsie = 0;
 
-
-#define trigPin 5
-#define echoPin 6
-
-*/
-/* Ultrasenoorsensor
-*********************************************************************************************************************/
-/*
-void setUpUltra(){
-	digital_config(trigPin, OUT); // trigger pin wordt output
-	digital_config(echoPin, IN); // echo pin is input
-}
-
-void setUpInterrupt(){
-	PORTD |= (1<<echoPin);		// Enable PD2 pull-up resistor. // digital_write(echoPin, 1)
+uint8_t calcDistance()
+{
+		
+		digital_write(echoPin, LOW);
+		digital_write(trigPin, HIGH);
 	
-	EIMSK  |= (1<<INT1);			// Enable INT1 interrupts.
+		int counter = 0;
 	
-	EICRA |= (1<<ISC11);		// The rising edge of INT1 generates an interrupt request.
-	// dit betekent: als er iets binnenkomt op de echopin wordt er een interrupt gegeven.
-}
+		digital_write(trigPin, LOW); // zorg ervoor dat trigger leeg is!
+		_delay_us(2);
+		digital_write(trigPin, HIGH);
+		
+		_delay_us(10);
+		digital_write(trigPin, LOW);
 
-void setUpTimer0(){
-	
-    TCCR1A = 0;
-	TCCR0B |= (1<<CS00);						   // NO prescaller , every tick is 1us  - START
-	TCNT0 = 0;								   // Clear counter
-	TIMSK0 |= (1<<TOIE0);					   // Enable Timer0-Overflow interrupts
-	sei();										// Global interrupts Enabled.
-}
-
-void startPulse(){
-	digital_write(trigPin, LOW); // zorg ervoor dat trigger leeg is!
-	_delay_us(2);
-	
-	digital_write(trigPin, HIGH);
-	
-	_delay_us(10);
-	digital_write(trigPin, LOW);
-	transmitSerial(8);
-	
-}
-
-
-uint8_t calcDistance(){
-	uint8_t dis;
-	echo_duration = Timer0_counter; // keer 256 omdat hij pas 1 optelt na 256 ticks
-	_delay_ms(1);
-	dis = (echo_duration * 0.034 / 2); // het moet wel passen, vandaar bitshift
-	transmitSerial(7);
-	return dis;
-	
-}
-
-*/
-/* dit is een soort van de main functie. Hierdoor krijg je de juiste afstand terug. Dit in scheduler gooien */
-/*	
-uint8_t getDistance(){
-	
-		if (is_measuring == 0)
-		{
-			is_measuring = 1;
-			startPulse();
-			_delay_ms(10);
-			distance = calcDistance();
-			transmitSerial(5);
-	
+		//
+		while(!digital_read(echoPin)){}
+		
+		//
+		while(digital_read(echoPin)){
+			counter += 1;
 		}
-
-		return distance;	
+		
+		// Bereken de afstand
+		pulsie = (counter >> 2)/ 5.7; // dit hebben we gekalibreerd.
+		// Bereken de afstand
+		
+		return pulsie;
+	
 }
-	
-	
-
-ISR(TIMER0_OVF_vect)  // Here every time Timer0 Overflow
-{
-	
-	if (echo_start)
-	{
-		Timer0_counter += 1; // hij telt tot 255 dan geeft hij een overflow. Bij overflow tellen we er 1 bij op
-		transmitSerial(3);
-	}
-	
-	if (PIND & 0x00)
-	{
-		echo_start = 0;
-		transmitSerial(4); // hier gaat het mis dus dit morgen uitzoeken!!!!!!!!!!
-		// ook kijken of het misgaat bij het veranderen naar een 8bits getal.
-	}
-	
-	
-	
-} 
-
-
-ISR(INT1_vect)
-{
-	
-	if (echo_start == 0)
-	{
-		TCNT0 = 0; // clear counter
-		Timer0_counter = 0; // clear de timer counter
-		echo_start = 1;
-		transmitSerial(2);
-	}
-}
-
-*/

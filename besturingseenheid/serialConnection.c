@@ -125,7 +125,7 @@ void serialReactor(){
 	command = receiveSerial();
 	data = receiveSerial();
 	
-	switch(command, data){
+	/*switch(command, data){
 		
 		case command == 0:
 		setArduinoID(data);
@@ -163,6 +163,7 @@ void serialReactor(){
 		setMaxLight(data);
 		break;
 	
-	_delay_ms(10);
+	_delay_ms(10);} */
 	
+
 }
