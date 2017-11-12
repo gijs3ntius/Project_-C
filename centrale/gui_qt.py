@@ -26,6 +26,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowIcon(icon)
         MainWindow.setStyleSheet("")
         #####################################################################################################
+        # The serial controller
         self.serial_controller = SerialController()
         #####################################################################################################
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -99,7 +100,7 @@ class Ui_MainWindow(object):
         self.stackedWidget.setObjectName("stackedWidget")
         self.page = QtWidgets.QWidget()
         self.page.setObjectName("page")
-        # self.page.addPlot(title="Basic array plotting", y=np.random.normal(size=100)) ################################### LET OP ################################
+
         self.stackedWidget.addWidget(self.page)
         self.page_2 = QtWidgets.QWidget()
         self.page_2.setObjectName("page_2")
@@ -315,6 +316,7 @@ class Ui_MainWindow(object):
         self.scrollout_max.sliderMoved['int'].connect(self.smaxout.setNum)
         self.scrollout_min.sliderMoved['int'].connect(self.sminout.setNum)
         #####################################################################################################
+        # Add actions to the GUI
         self.actionClose.triggered.connect(QtCore.QCoreApplication.instance().quit)
         self.actionRefresh.triggered.connect(self.refresh)
         #####################################################################################################

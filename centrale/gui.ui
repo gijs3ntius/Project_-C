@@ -39,10 +39,10 @@
          </sizepolicy>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(201, 211, 211)</string>
+         <string notr="true">background-color: rgb(142, 182, 255)</string>
         </property>
         <property name="text">
-         <string>Arduino - Not connected</string>
+         <string>Arduino - Connected</string>
         </property>
        </widget>
       </item>
@@ -55,7 +55,7 @@
          </sizepolicy>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(142, 182, 255)</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string>Arduino - Connected</string>
@@ -70,9 +70,6 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(201, 211, 211)</string>
-        </property>
         <property name="text">
          <string>Arduino - Not connected</string>
         </property>
@@ -86,9 +83,6 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(201, 211, 211)</string>
-        </property>
         <property name="text">
          <string>Arduino - Not connected</string>
         </property>
@@ -101,9 +95,6 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(201, 211, 211)</string>
         </property>
         <property name="text">
          <string>Arduino - Not connected</string>
