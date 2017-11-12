@@ -7,6 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from pyqtgraph import PlotWidget
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -21,12 +22,16 @@ class Ui_MainWindow(object):
         icon.addPixmap(QtGui.QPixmap("../Downloads/arduino_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setStyleSheet("")
+        #####################################################################################################
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+        #####################################################################################################
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.centralwidget)
         self.horizontalLayout.setObjectName("horizontalLayout")
+        #####################################################################################################
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
+        #####################################################################################################
         self.arduino1 = QtWidgets.QPushButton(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -36,6 +41,7 @@ class Ui_MainWindow(object):
         self.arduino1.setStyleSheet("background-color: rgb(142, 182, 255)")
         self.arduino1.setObjectName("arduino1")
         self.verticalLayout.addWidget(self.arduino1)
+        #####################################################################################################
         self.arduino2 = QtWidgets.QPushButton(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -45,6 +51,7 @@ class Ui_MainWindow(object):
         self.arduino2.setStyleSheet("")
         self.arduino2.setObjectName("arduino2")
         self.verticalLayout.addWidget(self.arduino2)
+        #####################################################################################################
         self.arduino3 = QtWidgets.QPushButton(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -53,6 +60,7 @@ class Ui_MainWindow(object):
         self.arduino3.setSizePolicy(sizePolicy)
         self.arduino3.setObjectName("arduino3")
         self.verticalLayout.addWidget(self.arduino3)
+        #####################################################################################################
         self.arduino4 = QtWidgets.QPushButton(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -61,6 +69,7 @@ class Ui_MainWindow(object):
         self.arduino4.setSizePolicy(sizePolicy)
         self.arduino4.setObjectName("arduino4")
         self.verticalLayout.addWidget(self.arduino4)
+        #####################################################################################################
         self.arduino5 = QtWidgets.QPushButton(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -69,25 +78,35 @@ class Ui_MainWindow(object):
         self.arduino5.setSizePolicy(sizePolicy)
         self.arduino5.setObjectName("arduino5")
         self.verticalLayout.addWidget(self.arduino5)
+        #####################################################################################################
         self.horizontalLayout.addLayout(self.verticalLayout)
+        #####################################################################################################
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
         self.verticalLayout_2.setObjectName("verticalLayout_2")
+        #####################################################################################################
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
         self.tabWidget.setStyleSheet("")
         self.tabWidget.setObjectName("tabWidget")
+        #####################################################################################################
         self.graphs = QtWidgets.QWidget()
         self.graphs.setObjectName("graphs")
+        #####################################################################################################
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.graphs)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
+        #####################################################################################################
         self.stackedWidget = QtWidgets.QStackedWidget(self.graphs)
         self.stackedWidget.setObjectName("stackedWidget")
+        #####################################################################################################
         self.page = QtWidgets.QWidget()
         self.page.setObjectName("page")
+        #####################################################################################################
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.page)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
+        #####################################################################################################
         self.label_6 = QtWidgets.QLabel(self.page)
         self.label_6.setObjectName("label_6")
         self.verticalLayout_4.addWidget(self.label_6)
+        #####################################################################################################
         self.graphicsView_2 = PlotWidget(self.page)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -96,8 +115,10 @@ class Ui_MainWindow(object):
         self.graphicsView_2.setSizePolicy(sizePolicy)
         self.graphicsView_2.setObjectName("graphicsView_2")
         self.verticalLayout_4.addWidget(self.graphicsView_2)
+        #####################################################################################################
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_4.addItem(spacerItem)
+        #####################################################################################################
         self.stackedWidget.addWidget(self.page)
         self.page_2 = QtWidgets.QWidget()
         self.page_2.setObjectName("page_2")
@@ -106,6 +127,7 @@ class Ui_MainWindow(object):
         self.graphtitle = QtWidgets.QLabel(self.page_2)
         self.graphtitle.setObjectName("graphtitle")
         self.verticalLayout_5.addWidget(self.graphtitle)
+        #####################################################################################################
         self.graphicsView = QtWidgets.QGraphicsView(self.page_2)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -116,13 +138,16 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.addWidget(self.graphicsView)
         spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_5.addItem(spacerItem1)
+        #####################################################################################################
         self.stackedWidget.addWidget(self.page_2)
         self.verticalLayout_3.addWidget(self.stackedWidget)
         self.tabWidget.addTab(self.graphs, "")
+        #####################################################################################################
         self.settings = QtWidgets.QWidget()
         self.settings.setObjectName("settings")
         self.gridLayout = QtWidgets.QGridLayout(self.settings)
         self.gridLayout.setObjectName("gridLayout")
+        #####################################################################################################
         self.label_4 = QtWidgets.QLabel(self.settings)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -131,6 +156,7 @@ class Ui_MainWindow(object):
         self.label_4.setSizePolicy(sizePolicy)
         self.label_4.setObjectName("label_4")
         self.gridLayout.addWidget(self.label_4, 2, 1, 1, 1)
+        #####################################################################################################
         self.label_7 = QtWidgets.QLabel(self.settings)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -139,11 +165,13 @@ class Ui_MainWindow(object):
         self.label_7.setSizePolicy(sizePolicy)
         self.label_7.setObjectName("label_7")
         self.gridLayout.addWidget(self.label_7, 1, 1, 1, 1)
+        #####################################################################################################
         self.label = QtWidgets.QLabel(self.settings)
         self.label.setWhatsThis("")
         self.label.setWordWrap(False)
         self.label.setObjectName("label")
         self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
+        #####################################################################################################
         self.label_2 = QtWidgets.QLabel(self.settings)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -152,6 +180,7 @@ class Ui_MainWindow(object):
         self.label_2.setSizePolicy(sizePolicy)
         self.label_2.setObjectName("label_2")
         self.gridLayout.addWidget(self.label_2, 0, 1, 1, 1)
+        #####################################################################################################
         self.tempscroll_down = QtWidgets.QSlider(self.settings)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -163,6 +192,7 @@ class Ui_MainWindow(object):
         self.tempscroll_down.setOrientation(QtCore.Qt.Horizontal)
         self.tempscroll_down.setObjectName("tempscroll_down")
         self.gridLayout.addWidget(self.tempscroll_down, 3, 2, 1, 1)
+        #####################################################################################################
         self.label_9 = QtWidgets.QLabel(self.settings)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -171,23 +201,28 @@ class Ui_MainWindow(object):
         self.label_9.setSizePolicy(sizePolicy)
         self.label_9.setObjectName("label_9")
         self.gridLayout.addWidget(self.label_9, 4, 0, 1, 1)
+        #####################################################################################################
         self.label_8 = QtWidgets.QLabel(self.settings)
         self.label_8.setObjectName("label_8")
         self.gridLayout.addWidget(self.label_8, 2, 0, 1, 1)
+        #####################################################################################################
         self.label_3 = QtWidgets.QLabel(self.settings)
         self.label_3.setText("")
         self.label_3.setObjectName("label_3")
         self.gridLayout.addWidget(self.label_3, 3, 0, 1, 1)
+        #####################################################################################################
         self.lightdown_slider = QtWidgets.QSlider(self.settings)
         self.lightdown_slider.setOrientation(QtCore.Qt.Horizontal)
         self.lightdown_slider.setObjectName("lightdown_slider")
         self.gridLayout.addWidget(self.lightdown_slider, 1, 2, 1, 1)
+        #####################################################################################################
         self.scrollout_min = QtWidgets.QSlider(self.settings)
         self.scrollout_min.setMinimum(2)
         self.scrollout_min.setMaximum(400)
         self.scrollout_min.setOrientation(QtCore.Qt.Horizontal)
         self.scrollout_min.setObjectName("scrollout_min")
         self.gridLayout.addWidget(self.scrollout_min, 5, 2, 1, 1)
+        #####################################################################################################
         self.label_14 = QtWidgets.QLabel(self.settings)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -196,37 +231,47 @@ class Ui_MainWindow(object):
         self.label_14.setSizePolicy(sizePolicy)
         self.label_14.setObjectName("label_14")
         self.gridLayout.addWidget(self.label_14, 5, 1, 1, 1)
+        #####################################################################################################
         self.scrollout_max = QtWidgets.QSlider(self.settings)
         self.scrollout_max.setMinimum(2)
         self.scrollout_max.setMaximum(400)
         self.scrollout_max.setOrientation(QtCore.Qt.Horizontal)
         self.scrollout_max.setObjectName("scrollout_max")
         self.gridLayout.addWidget(self.scrollout_max, 4, 2, 1, 1)
+        #####################################################################################################
         self.gridLayout_2 = QtWidgets.QGridLayout()
         self.gridLayout_2.setObjectName("gridLayout_2")
+        #####################################################################################################
         self.scrrollup = QtWidgets.QPushButton(self.settings)
         self.scrrollup.setObjectName("scrrollup")
         self.gridLayout_2.addWidget(self.scrrollup, 1, 0, 1, 1)
+        #####################################################################################################
         self.scrolldown = QtWidgets.QPushButton(self.settings)
         self.scrolldown.setObjectName("scrolldown")
         self.gridLayout_2.addWidget(self.scrolldown, 1, 1, 1, 1)
+        #####################################################################################################
         self.lightcheck = QtWidgets.QCheckBox(self.settings)
         self.lightcheck.setObjectName("lightcheck")
         self.gridLayout_2.addWidget(self.lightcheck, 0, 0, 1, 1)
+        #####################################################################################################
         self.tempcheck = QtWidgets.QCheckBox(self.settings)
         self.tempcheck.setObjectName("tempcheck")
         self.gridLayout_2.addWidget(self.tempcheck, 0, 1, 1, 1)
+        #####################################################################################################
         self.submit = QtWidgets.QPushButton(self.settings)
         self.submit.setObjectName("submit")
         self.gridLayout_2.addWidget(self.submit, 1, 2, 1, 1)
+        #####################################################################################################
         self.scrolloutcheck = QtWidgets.QCheckBox(self.settings)
         self.scrolloutcheck.setObjectName("scrolloutcheck")
         self.gridLayout_2.addWidget(self.scrolloutcheck, 0, 2, 1, 1)
         self.gridLayout.addLayout(self.gridLayout_2, 6, 0, 1, 4)
+        #####################################################################################################
         self.lightup_slider = QtWidgets.QSlider(self.settings)
         self.lightup_slider.setOrientation(QtCore.Qt.Horizontal)
         self.lightup_slider.setObjectName("lightup_slider")
         self.gridLayout.addWidget(self.lightup_slider, 0, 2, 1, 1)
+        #####################################################################################################
         self.lightup_bar = QtWidgets.QProgressBar(self.settings)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -239,6 +284,7 @@ class Ui_MainWindow(object):
         self.label_13 = QtWidgets.QLabel(self.settings)
         self.label_13.setObjectName("label_13")
         self.gridLayout.addWidget(self.label_13, 4, 1, 1, 1)
+        #####################################################################################################
         self.lightdown_bar = QtWidgets.QProgressBar(self.settings)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -248,6 +294,7 @@ class Ui_MainWindow(object):
         self.lightdown_bar.setProperty("value", 0)
         self.lightdown_bar.setObjectName("lightdown_bar")
         self.gridLayout.addWidget(self.lightdown_bar, 1, 3, 1, 1)
+        #####################################################################################################
         self.label_5 = QtWidgets.QLabel(self.settings)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -256,19 +303,24 @@ class Ui_MainWindow(object):
         self.label_5.setSizePolicy(sizePolicy)
         self.label_5.setObjectName("label_5")
         self.gridLayout.addWidget(self.label_5, 3, 1, 1, 1)
+        #####################################################################################################
         self.tempnumber_up = QtWidgets.QLabel(self.settings)
         self.tempnumber_up.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.tempnumber_up.setObjectName("tempnumber_up")
         self.gridLayout.addWidget(self.tempnumber_up, 2, 3, 1, 1)
+        #####################################################################################################
         self.tempnumber_down = QtWidgets.QLabel(self.settings)
         self.tempnumber_down.setObjectName("tempnumber_down")
         self.gridLayout.addWidget(self.tempnumber_down, 3, 3, 1, 1)
+        #####################################################################################################
         self.sminout = QtWidgets.QLabel(self.settings)
         self.sminout.setObjectName("sminout")
         self.gridLayout.addWidget(self.sminout, 5, 3, 1, 1)
+        #####################################################################################################
         self.smaxout = QtWidgets.QLabel(self.settings)
         self.smaxout.setObjectName("smaxout")
         self.gridLayout.addWidget(self.smaxout, 4, 3, 1, 1)
+        #####################################################################################################
         self.tempscroll_up = QtWidgets.QSlider(self.settings)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -281,13 +333,16 @@ class Ui_MainWindow(object):
         self.tempscroll_up.setOrientation(QtCore.Qt.Horizontal)
         self.tempscroll_up.setObjectName("tempscroll_up")
         self.gridLayout.addWidget(self.tempscroll_up, 2, 2, 1, 1)
+        #####################################################################################################
         self.tabWidget.addTab(self.settings, "")
         self.verticalLayout_2.addWidget(self.tabWidget)
         self.horizontalLayout.addLayout(self.verticalLayout_2)
         MainWindow.setCentralWidget(self.centralwidget)
+        #####################################################################################################
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 802, 22))
         self.menubar.setObjectName("menubar")
+        #####################################################################################################
         self.menu = QtWidgets.QMenu(self.menubar)
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("../Downloads/if_menu_2639862.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -297,18 +352,21 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        #####################################################################################################
         self.actionClose = QtWidgets.QAction(MainWindow)
         self.actionClose.setObjectName("actionClose")
+        #####################################################################################################
         self.actionRefresh = QtWidgets.QAction(MainWindow)
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap("../Downloads/if_refresh_2639897.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionRefresh.setIcon(icon2)
         self.actionRefresh.setObjectName("actionRefresh")
+        #####################################################################################################
         self.menu.addSeparator()
         self.menu.addAction(self.actionRefresh)
         self.menu.addAction(self.actionClose)
         self.menubar.addAction(self.menu.menuAction())
-
+        #####################################################################################################
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
         self.stackedWidget.setCurrentIndex(0)
@@ -318,6 +376,11 @@ class Ui_MainWindow(object):
         self.tempscroll_down.sliderMoved['int'].connect(self.tempnumber_down.setNum)
         self.scrollout_max.sliderMoved['int'].connect(self.smaxout.setNum)
         self.scrollout_min.sliderMoved['int'].connect(self.sminout.setNum)
+        #####################################################################################################
+        # Add actions to the GUI
+        self.actionClose.triggered.connect(QtCore.QCoreApplication.instance().quit)
+        self.actionRefresh.triggered.connect(self.refresh)
+        #####################################################################################################
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -356,8 +419,6 @@ class Ui_MainWindow(object):
         self.actionClose.setText(_translate("MainWindow", "Close"))
         self.actionRefresh.setText(_translate("MainWindow", "Refresh"))
 
-from pyqtgraph import PlotWidget
-
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
@@ -366,4 +427,3 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-
