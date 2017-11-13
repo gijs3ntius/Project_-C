@@ -22,7 +22,7 @@ class Ui_MainWindow(object):
         self.graphTimer = QtCore.QTimer()
         self.dataTimer = QtCore.QTimer()
         self.dataTimer.timeout.connect(self.updateData)
-        self.graphTimer.start(1000)  # starts the timer for graph drawing
+        # self.graphTimer.start(1000)  # starts the timer for graph drawing
         self.dataTimer.start(1000)  # reads the data
         #####################################################################################################
         # The serial controller
@@ -468,12 +468,22 @@ class Ui_MainWindow(object):
         self.updateGraph(self.light_plot, self.controllers_data[self.controllers[0]].getData('light'))  # update light graph
         self.updateGraph(self.temp_plot, self.controllers_data[self.controllers[0]].getData('temp'))  # update temperature graph
 
+    def doNothing(self):
+        pass
+
     def selectArduino1(self):
         try:
-            self.selected_controller = self.controllers[0]  # select the controller
-            self.graphTimer.timeout.connect(self.updateGraph1)
-            self.setArduinoStyleSheet()
-            self.arduino1.setStyleSheet("background-color: rgb(142, 182, 255)")  # color the button
+            if self.selected_controller is self.controllers[0]:
+                self.selected_controller = None
+                self.setArduinoStyleSheet()
+                self.graphTimer.stop()
+            else:
+                self.selected_controller = self.controllers[0]  # select the controller
+                self.graphTimer = QtCore.QTimer()
+                self.graphTimer.timeout.connect(self.updateGraph1)
+                self.graphTimer.start(1000)
+                self.setArduinoStyleSheet()
+                self.arduino1.setStyleSheet("background-color: rgb(142, 182, 255)")  # color the button
 
         except Exception as e:
             self.selected_controller = None
@@ -486,7 +496,9 @@ class Ui_MainWindow(object):
     def selectArduino2(self):
         try:
             self.selected_controller = self.controllers[1]  # select the controller
+            self.graphTimer = QtCore.QTimer()
             self.graphTimer.timeout.connect(self.updateGraph2)
+            self.graphTimer.start(1000)
             self.setArduinoStyleSheet()
             self.arduino2.setStyleSheet("background-color: rgb(142, 182, 255)")  # color the button
         except Exception as e:
@@ -500,7 +512,9 @@ class Ui_MainWindow(object):
     def selectArduino3(self):
         try:
             self.selected_controller = self.controllers[2]  # select the controller
+            self.graphTimer = QtCore.QTimer()
             self.graphTimer.timeout.connect(self.updateGraph3)
+            self.graphTimer.start(1000)
             self.setArduinoStyleSheet()
             self.arduino3.setStyleSheet("background-color: rgb(142, 182, 255)")  # color the button
         except Exception as e:
@@ -514,7 +528,9 @@ class Ui_MainWindow(object):
     def selectArduino4(self):
         try:
             self.selected_controller = self.controllers[3]  # select the controller
+            self.graphTimer = QtCore.QTimer()
             self.graphTimer.timeout.connect(self.updateGraph4)
+            self.graphTimer.start(1000)
             self.setArduinoStyleSheet()
             self.arduino4.setStyleSheet("background-color: rgb(142, 182, 255)")  # color the button
         except Exception as e:
@@ -527,8 +543,13 @@ class Ui_MainWindow(object):
 
     def selectArduino5(self):
         try:
+            if self.selected_controller :
+                self.selected_controller = None
+                self.setArduinoStyleSheet()
             self.selected_controller = self.controllers[4]  # select the controller
+            self.graphTimer = QtCore.QTimer()
             self.graphTimer.timeout.connect(self.updateGraph5)
+            self.graphTimer.start(1000)
             self.setArduinoStyleSheet()
             self.arduino5.setStyleSheet("background-color: rgb(142, 182, 255)")  # color the button
         except Exception as e:
