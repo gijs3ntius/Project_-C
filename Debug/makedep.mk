@@ -4,8 +4,6 @@
 
 AVR_TTC_scheduler.c
 
-distance_sensor.c
-
 EEPROMconfig.c
 
 main.c

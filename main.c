@@ -44,7 +44,7 @@ void Temperature(){
 
 
 void Distance(){
-	uint8_t command = 0b00110011;
+	uint8_t command = 0b00010011;
 	data3 = calcDistance();
 	transmitSerial(command);
 	_delay_ms(50);
@@ -106,7 +106,7 @@ int main(void)
 	//SCH_Add_Task(settingsChecker, 200, 200); // misschien om de minuut
 	//SCH_Add_Task(serialReactor,0,1);
 	
-	//SCH_Add_Task(Distance, 0, 200);
+	SCH_Add_Task(Distance, 20, 100);
 	
 	
 	SCH_Start();// start de scheduler 

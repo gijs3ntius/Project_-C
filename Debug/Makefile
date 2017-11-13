@@ -38,7 +38,6 @@ SUBDIRS :=
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../AVR_TTC_scheduler.c \
-../distance_sensor.c \
 ../EEPROMconfig.c \
 ../main.c \
 ../nieuwe_distance.c \
@@ -55,7 +54,6 @@ ASM_SRCS +=
 
 OBJS +=  \
 AVR_TTC_scheduler.o \
-distance_sensor.o \
 EEPROMconfig.o \
 main.o \
 nieuwe_distance.o \
@@ -65,7 +63,6 @@ serialConnection.o
 
 OBJS_AS_ARGS +=  \
 AVR_TTC_scheduler.o \
-distance_sensor.o \
 EEPROMconfig.o \
 main.o \
 nieuwe_distance.o \
@@ -75,7 +72,6 @@ serialConnection.o
 
 C_DEPS +=  \
 AVR_TTC_scheduler.d \
-distance_sensor.d \
 EEPROMconfig.d \
 main.d \
 nieuwe_distance.d \
@@ -85,7 +81,6 @@ serialConnection.d
 
 C_DEPS_AS_ARGS +=  \
 AVR_TTC_scheduler.d \
-distance_sensor.d \
 EEPROMconfig.d \
 main.d \
 nieuwe_distance.d \
@@ -107,8 +102,6 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
-
-
 
 
 
