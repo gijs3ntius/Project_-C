@@ -25,7 +25,7 @@ uint8_t data3;
 
 void Light(){
 	uint8_t command = 0b00010001;
-	data1 = getLight(2);
+	data1 = getLight(1);
 	transmitSerial(command);
 	_delay_ms(50);
 	transmitSerial(data1);
@@ -34,7 +34,7 @@ void Light(){
 
 void Temperature(){
 	uint8_t command = 0b00010010;
-	data2 = getTemp(1);
+	data2 = getTemp(2);
 	transmitSerial(command);
 	_delay_ms(50);
 	transmitSerial(data2);
