@@ -1,13 +1,8 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'gui.ui'
-#
-# Created by: PyQt5 UI code generator 5.9.1
-#
-# WARNING! All changes made in this file will be lost!
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pyqtgraph import PlotWidget
+import numpy as np
+from controllers import SerialController, DataController
+from enums import Command, SensorType
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -19,9 +14,23 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
         MainWindow.setSizePolicy(sizePolicy)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("../Downloads/arduino_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("../centrale/icons/arduino_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setStyleSheet("")
+        #####################################################################################################
+        # timers
+        self.graphTimer = QtCore.QTimer()
+        self.dataTimer = QtCore.QTimer()
+        self.dataTimer.timeout.connect(self.updateData)
+        self.graphTimer.start(1000)  # starts the timer for graph drawing
+        self.dataTimer.start(1000)  # reads the data
+        #####################################################################################################
+        # The serial controller
+        self.serial_controller = SerialController()
+        #####################################################################################################
+        self.selected_controller = None
+        self.controllers = []
+        self.controllers_data = {}
         #####################################################################################################
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -38,7 +47,6 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.arduino1.sizePolicy().hasHeightForWidth())
         self.arduino1.setSizePolicy(sizePolicy)
-        self.arduino1.setStyleSheet("background-color: rgb(142, 182, 255)")
         self.arduino1.setObjectName("arduino1")
         self.verticalLayout.addWidget(self.arduino1)
         #####################################################################################################
@@ -94,53 +102,26 @@ class Ui_MainWindow(object):
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.graphs)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         #####################################################################################################
-        self.stackedWidget = QtWidgets.QStackedWidget(self.graphs)
-        self.stackedWidget.setObjectName("stackedWidget")
-        #####################################################################################################
-        self.page = QtWidgets.QWidget()
-        self.page.setObjectName("page")
-        #####################################################################################################
-        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.page)
-        self.verticalLayout_4.setObjectName("verticalLayout_4")
-        #####################################################################################################
-        self.label_6 = QtWidgets.QLabel(self.page)
+        self.label_6 = QtWidgets.QLabel(self.graphs)
         self.label_6.setObjectName("label_6")
-        self.verticalLayout_4.addWidget(self.label_6)
+        self.verticalLayout_3.addWidget(self.label_6)
         #####################################################################################################
-        self.graphicsView_2 = PlotWidget(self.page)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.graphicsView_2.sizePolicy().hasHeightForWidth())
-        self.graphicsView_2.setSizePolicy(sizePolicy)
-        self.graphicsView_2.setObjectName("graphicsView_2")
-        self.verticalLayout_4.addWidget(self.graphicsView_2)
-        #####################################################################################################
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_4.addItem(spacerItem)
-        #####################################################################################################
-        self.stackedWidget.addWidget(self.page)
-        self.page_2 = QtWidgets.QWidget()
-        self.page_2.setObjectName("page_2")
-        self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.page_2)
-        self.verticalLayout_5.setObjectName("verticalLayout_5")
-        self.graphtitle = QtWidgets.QLabel(self.page_2)
-        self.graphtitle.setObjectName("graphtitle")
-        self.verticalLayout_5.addWidget(self.graphtitle)
-        #####################################################################################################
-        self.graphicsView = QtWidgets.QGraphicsView(self.page_2)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.graphicsView.sizePolicy().hasHeightForWidth())
-        self.graphicsView.setSizePolicy(sizePolicy)
+        self.graphicsView = PlotWidget(self.graphs)
         self.graphicsView.setObjectName("graphicsView")
-        self.verticalLayout_5.addWidget(self.graphicsView)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_5.addItem(spacerItem1)
+        # self.light_plot = self.graphicsView.plot(np.random.normal(size=100))
+        self.light_plot = self.graphicsView.plot([])
+        self.verticalLayout_3.addWidget(self.graphicsView)
         #####################################################################################################
-        self.stackedWidget.addWidget(self.page_2)
-        self.verticalLayout_3.addWidget(self.stackedWidget)
+        self.label_10 = QtWidgets.QLabel(self.graphs)
+        self.label_10.setObjectName("label_10")
+        self.verticalLayout_3.addWidget(self.label_10)
+        #####################################################################################################
+        self.graphicsView_2 = PlotWidget(self.graphs)
+        self.graphicsView_2.setObjectName("graphicsView_2")
+        # self.temp_plot = self.graphicsView_2.plot(np.random.normal(size=100))
+        self.temp_plot = self.graphicsView_2.plot([])
+        self.verticalLayout_3.addWidget(self.graphicsView_2)
+        #####################################################################################################
         self.tabWidget.addTab(self.graphs, "")
         #####################################################################################################
         self.settings = QtWidgets.QWidget()
@@ -345,7 +326,7 @@ class Ui_MainWindow(object):
         #####################################################################################################
         self.menu = QtWidgets.QMenu(self.menubar)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("../Downloads/if_menu_2639862.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("..\centrale\icons\if_menu_2639862.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.menu.setIcon(icon1)
         self.menu.setObjectName("menu")
         MainWindow.setMenuBar(self.menubar)
@@ -354,11 +335,14 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
         #####################################################################################################
         self.actionClose = QtWidgets.QAction(MainWindow)
+        iconquit = QtGui.QIcon()
+        iconquit.addPixmap(QtGui.QPixmap("..\centrale\icons\if_minus_2639865.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionClose.setIcon(iconquit)
         self.actionClose.setObjectName("actionClose")
         #####################################################################################################
         self.actionRefresh = QtWidgets.QAction(MainWindow)
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("../Downloads/if_refresh_2639897.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("..\centrale\icons\if_refresh_2639897.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionRefresh.setIcon(icon2)
         self.actionRefresh.setObjectName("actionRefresh")
         #####################################################################################################
@@ -369,7 +353,6 @@ class Ui_MainWindow(object):
         #####################################################################################################
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
-        self.stackedWidget.setCurrentIndex(0)
         self.lightup_slider.sliderMoved['int'].connect(self.lightup_bar.setValue)
         self.lightdown_slider.sliderMoved['int'].connect(self.lightdown_bar.setValue)
         self.tempscroll_up.sliderMoved['int'].connect(self.tempnumber_up.setNum)
@@ -380,19 +363,24 @@ class Ui_MainWindow(object):
         # Add actions to the GUI
         self.actionClose.triggered.connect(QtCore.QCoreApplication.instance().quit)
         self.actionRefresh.triggered.connect(self.refresh)
+        self.arduino1.clicked.connect(self.selectArduino1)
+        self.arduino2.clicked.connect(self.selectArduino2)
+        self.arduino3.clicked.connect(self.selectArduino3)
+        self.arduino4.clicked.connect(self.selectArduino4)
+        self.arduino5.clicked.connect(self.selectArduino5)
         #####################################################################################################
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Central Control"))
-        self.arduino1.setText(_translate("MainWindow", "Arduino - Connected"))
-        self.arduino2.setText(_translate("MainWindow", "Arduino - Connected"))
+        self.arduino1.setText(_translate("MainWindow", "Arduino - Not connected"))
+        self.arduino2.setText(_translate("MainWindow", "Arduino - Not connected"))
         self.arduino3.setText(_translate("MainWindow", "Arduino - Not connected"))
         self.arduino4.setText(_translate("MainWindow", "Arduino - Not connected"))
         self.arduino5.setText(_translate("MainWindow", "Arduino - Not connected"))
         self.label_6.setText(_translate("MainWindow", "Light Graph"))
-        self.graphtitle.setText(_translate("MainWindow", "Temperature Graph"))
+        self.label_10.setText(_translate("MainWindow", "temperature Graph"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.graphs), _translate("MainWindow", "Graphs"))
         self.label_4.setText(_translate("MainWindow", "Scroll up"))
         self.label_7.setText(_translate("MainWindow", "Scroll down"))
@@ -418,6 +406,135 @@ class Ui_MainWindow(object):
         self.menu.setTitle(_translate("MainWindow", "Menu"))
         self.actionClose.setText(_translate("MainWindow", "Close"))
         self.actionRefresh.setText(_translate("MainWindow", "Refresh"))
+
+    def refresh(self):
+        self.controllers = self.serial_controller.connect_ports()
+        # Set the datacontroller for each device that is connected
+        for controller in self.controllers:
+            if controller not in self.controllers_data.keys():
+                self.controllers_data[controller] = DataController()
+                self.controllers_data[controller].set_data_types('light', 'temp')
+        # Update the gui to show the connected devices
+        device_number = 0
+        _translate = QtCore.QCoreApplication.translate
+        self.setArduinotextEmtpy(_translate)
+        for controller in self.controllers:
+            if device_number == 0:
+                self.arduino1.setText(_translate("MainWindow", "Arduino - Connected: %s" % controller))
+            elif device_number == 1:
+                self.arduino2.setText(_translate("MainWindow", "Arduino - Connected: %s" % controller))
+            elif device_number == 2:
+                self.arduino3.setText(_translate("MainWindow", "Arduino - Connected: %s" % controller))
+            elif device_number == 3:
+                self.arduino4.setText(_translate("MainWindow", "Arduino - Connected: %s" % controller))
+            elif device_number == 4:
+                self.arduino5.setText(_translate("MainWindow", "Arduino - Connected: %s" % controller))
+            else:
+                break;
+            device_number += 1
+
+    def setArduinotextEmtpy(self, translate):
+        # set all the text to not connected
+        self.arduino1.setText(translate("MainWindow", "Arduino - Not connected"))
+        self.arduino2.setText(translate("MainWindow", "Arduino - Not connected"))
+        self.arduino3.setText(translate("MainWindow", "Arduino - Not connected"))
+        self.arduino4.setText(translate("MainWindow", "Arduino - Not connected"))
+        self.arduino5.setText(translate("MainWindow", "Arduino - Not connected"))
+
+    def setArduinoStyleSheet(self):
+        # decolor the buttons
+        self.arduino1.setStyleSheet("")
+        self.arduino2.setStyleSheet("")
+        self.arduino3.setStyleSheet("")
+        self.arduino4.setStyleSheet("")
+        self.arduino5.setStyleSheet("")
+
+    def updateData(self):
+        data = self.serial_controller.read_ports()
+        for data_block in data:
+            if self.controllers_data[data_block[0]] is not None:
+                if data_block[1] == SensorType.LIGHT.value:
+                    self.controllers_data[data_block[0]].update(data_type='light', data=data_block[2])
+                elif data_block[1] == SensorType.TEMP.value:
+                    if data_block[2] < 60:
+                        self.controllers_data[data_block[0]].update(data_type='temp', data=data_block[2])
+
+    def updateGraph(self, graph, data):
+        graph.setData(data)
+
+    def updateGraph1(self):
+        print(self.controllers_data[self.controllers[0]].getData('temp'))  # for debugging purposes
+        # self.updateGraph(self.light_plot, [1,2,3,4,5])   # for debugging purposes
+        self.updateGraph(self.light_plot, self.controllers_data[self.controllers[0]].getData('light'))  # update light graph
+        self.updateGraph(self.temp_plot, self.controllers_data[self.controllers[0]].getData('temp'))  # update temperature graph
+
+    def selectArduino1(self):
+        try:
+            self.selected_controller = self.controllers[0]  # select the controller
+            self.graphTimer.timeout.connect(self.updateGraph1)
+            self.setArduinoStyleSheet()
+            self.arduino1.setStyleSheet("background-color: rgb(142, 182, 255)")  # color the button
+
+        except Exception as e:
+            self.selected_controller = None
+            pass
+
+    def updateGraph2(self):
+        self.updateGraph(graphicsView, self.controllers_data[self.controllers[1]].getData('light'))  # update light graph
+        self.updateGraph(graphicsView_2, self.controllers_data[self.controllers[1]].getData('temp'))  # update temperature graph
+
+    def selectArduino2(self):
+        try:
+            self.selected_controller = self.controllers[1]  # select the controller
+            self.graphTimer.timeout.connect(self.updateGraph2)
+            self.setArduinoStyleSheet()
+            self.arduino2.setStyleSheet("background-color: rgb(142, 182, 255)")  # color the button
+        except Exception as e:
+            self.selected_controller = None
+            pass
+
+    def updateGraph3(self):
+        self.updateGraph(graphicsView, self.controllers_data[self.controllers[2]].getData('light'))  # update light graph
+        self.updateGraph(graphicsView_2, self.controllers_data[self.controllers[2]].getData('temp'))  # update temperature graph
+
+    def selectArduino3(self):
+        try:
+            self.selected_controller = self.controllers[2]  # select the controller
+            self.graphTimer.timeout.connect(self.updateGraph3)
+            self.setArduinoStyleSheet()
+            self.arduino3.setStyleSheet("background-color: rgb(142, 182, 255)")  # color the button
+        except Exception as e:
+            self.selected_controller = None
+            pass
+
+    def updateGraph4(self):
+        self.updateGraph(graphicsView, self.controllers_data[self.controllers[3]].getData('light'))  # update light graph
+        self.updateGraph(graphicsView_2, self.controllers_data[self.controllers[3]].getData('temp'))  # update temperature graph
+
+    def selectArduino4(self):
+        try:
+            self.selected_controller = self.controllers[3]  # select the controller
+            self.graphTimer.timeout.connect(self.updateGraph4)
+            self.setArduinoStyleSheet()
+            self.arduino4.setStyleSheet("background-color: rgb(142, 182, 255)")  # color the button
+        except Exception as e:
+            self.selected_controller = None
+            pass
+
+    def updateGraph5(self):
+        self.updateGraph(graphicsView, self.controllers_data[self.controllers[4]].getData('light'))  # update light graph
+        self.updateGraph(graphicsView_2, self.controllers_data[self.controllers[4]].getData('temp'))  # update temperature graph
+
+    def selectArduino5(self):
+        try:
+            self.selected_controller = self.controllers[4]  # select the controller
+            self.graphTimer.timeout.connect(self.updateGraph5)
+            self.setArduinoStyleSheet()
+            self.arduino5.setStyleSheet("background-color: rgb(142, 182, 255)")  # color the button
+        except Exception as e:
+            self.selected_controller = None
+            pass
+
 
 if __name__ == "__main__":
     import sys

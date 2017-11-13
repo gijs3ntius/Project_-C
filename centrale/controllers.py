@@ -11,17 +11,20 @@ class SerialController:
         self.supported_devices = ["Arduino Uno", "USB-SERIAL CH340"]
 
     def connect_ports(self):
+        control_units = {}
         for port in list(list_ports.comports()):
             if re.sub(r'\s+\(\w+\)', "", port[1]) in self.supported_devices:
                 if port[0] not in self.control_units.keys():
-                    self.control_units[port[0]] = SerialConnection(baudrate=19200, port=port[0])
-        print(self.control_units.keys())
-        # return self.control_units.keys()  # returns the com ports
+                    control_units[port[0]] = SerialConnection(baudrate=19200, port=port[0])  # add new ports
+                elif port[0] in self.control_units.keys():
+                    control_units[port[0]] = self.control_units[port[0]]  # add all the ports that are still connected
+        self.control_units = control_units
+        # print(list(self.control_units.keys()))  # only for debugging purposes
+        return list(self.control_units.keys())  # returns the com ports
 
     def read_ports(self):
         if not self.__paused__:
             data_list = []
-            print(self.control_units.keys())
             for port in self.control_units.keys():
                 try:
                     data = self.control_units[port].receive()
@@ -35,7 +38,7 @@ class SerialController:
                 control_unit_id = header >> 4  # SEE DATAPROTOCOL
                 sensor = header & 0x0F  # SEE DATAPROTOCOL
                 data_list.append([port, sensor, content])
-                # print(control_unit_id, "type:", sensor, "value:", content)  # for debugging purposes
+                # print(port, "type:", sensor, "value:", content)  # for debugging purposes
             return data_list
 
     def __debug_read_data__(self):
@@ -65,11 +68,28 @@ class SerialController:
     def getConnectedDevices(self):
         return self.control_units
 
+class DataController:
+    # constructor
+    def __init__(self):
+        self.data_dict = {}
+        # self.set_data_types('temp', 'light')
+
+    # expects strings
+    def set_data_types(self, *data_types):
+        for data_type in data_types:
+            self.data_dict.setdefault(data_type, [])
+
+    def update(self, data_type, data):
+        self.data_dict.setdefault(data_type, []).append(data)
+
+    def getData(self, data_type):
+        return self.data_dict[data_type]
+
 
 # only here for debugging purposes
 if __name__ == '__main__':
     test = 0  # this would be the GUI normally
-    sl = SerialControler(test)
+    sl = SerialController()
     sl.connect_ports()
     # sl.__debug_read_data__()
     number = 0
