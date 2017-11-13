@@ -5,7 +5,7 @@ import time
 import re
 
 class SerialController:
-    def __init__(self, GUI):
+    def __init__(self,):
         self.__paused__ = False
         self.control_units = {}
         self.supported_devices = ["Arduino Uno", "USB-SERIAL CH340"]
@@ -15,7 +15,8 @@ class SerialController:
             if re.sub(r'\s+\(\w+\)', "", port[1]) in self.supported_devices:
                 if port[0] not in self.control_units.keys():
                     self.control_units[port[0]] = SerialConnection(baudrate=19200, port=port[0])
-        return self.control_units.keys()  # returns the com ports
+        print(self.control_units.keys())
+        # return self.control_units.keys()  # returns the com ports
 
     def read_ports(self):
         if not self.__paused__:
@@ -77,6 +78,8 @@ if __name__ == '__main__':
         if number % 7 == 0:
             sl.connect_ports()
             time.sleep(0.1)
+        if number % 29 == 0:
+            send_command(Command.ROL_OUT, 0x00)
         # sl.debug_read_data()
         sl.read_ports()
         time.sleep(0.1)
