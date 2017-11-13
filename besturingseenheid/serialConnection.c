@@ -8,6 +8,8 @@
 #include <avr/io.h>
 #include <stdlib.h>
 #include <avr/sfr_defs.h>
+#include "EEPROMconfig.h"
+#include "sensorIO.h"
 #define UBBRVAL 51
 
 /************************************************************************/
@@ -114,4 +116,54 @@ void transmitSerial(uint8_t data) {
 	loop_until_bit_is_set(UCSR0A, UDRE0);
 	// send the data
 	UDR0 = data;
+}
+
+void serialReactor(){
+	uint8_t command;
+	uint8_t  data;
+	
+	command = receiveSerial();
+	data = receiveSerial();
+	
+	/*switch(command, data){
+		
+		case command == 0:
+		setArduinoID(data);
+		break;
+		
+		case command == 1:
+		rolledInOrOut(command, getMaxRoll());
+		break;
+		
+		case command == 2:
+		rolledInOrOut(command, getMinRoll());
+		break;
+		
+		case command == 3:
+		setMaxRoll(data);
+		break;
+		
+		case command == 4:
+		setMinRoll(data);
+		break;
+		
+		case command == 5:
+		setMinTemp(data);
+		break;
+		
+		case command == 6:
+		setMaxTemp(data);
+		break;
+		
+		case command == 7:
+		setMinLight(data);
+		break;
+		
+		case command == 8:
+		setMaxLight(data);
+		break;
+	
+	_delay_ms(10);} */
+	
+
 }

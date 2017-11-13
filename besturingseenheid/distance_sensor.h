@@ -7,5 +7,4 @@ void setUpInterrupt();
 
 void setUpTimer0();
 
-int getDistance();
 
