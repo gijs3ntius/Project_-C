@@ -1,8 +1,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QThread
+from threading import Thread
 from pyqtgraph import PlotWidget
 import numpy as np
 from controllers import SerialController, DataController
 from enums import Command, SensorType
+import time
+import atexit
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -18,15 +22,14 @@ class Ui_MainWindow(object):
         MainWindow.setWindowIcon(icon)
         MainWindow.setStyleSheet("")
         #####################################################################################################
-        # timers
-        self.graphTimer = QtCore.QTimer()
-        self.dataTimer = QtCore.QTimer()
-        self.dataTimer.timeout.connect(self.updateData)
-        # self.graphTimer.start(1000)  # starts the timer for graph drawing
-        self.dataTimer.start(1000)  # reads the data
-        #####################################################################################################
         # The serial controller
         self.serial_controller = SerialController()
+        #####################################################################################################
+        # timers & threads
+        self.graphTimer = QtCore.QTimer()
+        self.exit = False
+        atexit.register(self.stopThread)  # register the stopThread funtion to get out of the infinite loop
+        self.thread = Thread(target=self.updateData)  # Start a thread to read data
         #####################################################################################################
         self.selected_controller = None
         self.controllers = []
@@ -108,7 +111,6 @@ class Ui_MainWindow(object):
         #####################################################################################################
         self.graphicsView = PlotWidget(self.graphs)
         self.graphicsView.setObjectName("graphicsView")
-        # self.light_plot = self.graphicsView.plot(np.random.normal(size=100))
         self.light_plot = self.graphicsView.plot([])
         self.verticalLayout_3.addWidget(self.graphicsView)
         #####################################################################################################
@@ -118,9 +120,16 @@ class Ui_MainWindow(object):
         #####################################################################################################
         self.graphicsView_2 = PlotWidget(self.graphs)
         self.graphicsView_2.setObjectName("graphicsView_2")
-        # self.temp_plot = self.graphicsView_2.plot(np.random.normal(size=100))
         self.temp_plot = self.graphicsView_2.plot([])
         self.verticalLayout_3.addWidget(self.graphicsView_2)
+        #####################################################################################################
+        self.label_11 = QtWidgets.QLabel(self.graphs)
+        self.label_11.setObjectName("label_11")
+        self.verticalLayout_3.addWidget(self.label_11)
+        #####################################################################################################
+        self.label_12 = QtWidgets.QLabel(self.graphs)
+        self.label_12.setObjectName("label_12")
+        self.verticalLayout_3.addWidget(self.label_12)
         #####################################################################################################
         self.tabWidget.addTab(self.graphs, "")
         #####################################################################################################
@@ -199,7 +208,7 @@ class Ui_MainWindow(object):
         #####################################################################################################
         self.scrollout_min = QtWidgets.QSlider(self.settings)
         self.scrollout_min.setMinimum(2)
-        self.scrollout_min.setMaximum(400)
+        self.scrollout_min.setMaximum(255)
         self.scrollout_min.setOrientation(QtCore.Qt.Horizontal)
         self.scrollout_min.setObjectName("scrollout_min")
         self.gridLayout.addWidget(self.scrollout_min, 5, 2, 1, 1)
@@ -215,7 +224,7 @@ class Ui_MainWindow(object):
         #####################################################################################################
         self.scrollout_max = QtWidgets.QSlider(self.settings)
         self.scrollout_max.setMinimum(2)
-        self.scrollout_max.setMaximum(400)
+        self.scrollout_max.setMaximum(255)
         self.scrollout_max.setOrientation(QtCore.Qt.Horizontal)
         self.scrollout_max.setObjectName("scrollout_max")
         self.gridLayout.addWidget(self.scrollout_max, 4, 2, 1, 1)
@@ -388,6 +397,8 @@ class Ui_MainWindow(object):
         self.label_2.setText(_translate("MainWindow", "Scroll up"))
         self.label_9.setText(_translate("MainWindow", "Scroll out"))
         self.label_8.setText(_translate("MainWindow", "Temperature"))
+        self.label_11.setText(_translate("MainWindow", "Distance"))
+        self.label_12.setText(_translate("MainWindow", "255 cm"))
         self.label_14.setText(_translate("MainWindow", "Min"))
         self.scrrollup.setText(_translate("MainWindow", "Scroll up"))
         self.scrolldown.setText(_translate("MainWindow", "Scroll down"))
@@ -401,7 +412,7 @@ class Ui_MainWindow(object):
         self.tempnumber_up.setText(_translate("MainWindow", "0 °C"))
         self.tempnumber_down.setText(_translate("MainWindow", "0 °C"))
         self.sminout.setText(_translate("MainWindow", "2 cm"))
-        self.smaxout.setText(_translate("MainWindow", "400 cm"))
+        self.smaxout.setText(_translate("MainWindow", "255 cm"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.settings), _translate("MainWindow", "Settings"))
         self.menu.setTitle(_translate("MainWindow", "Menu"))
         self.actionClose.setText(_translate("MainWindow", "Close"))
@@ -415,6 +426,9 @@ class Ui_MainWindow(object):
                 self.controllers_data[controller] = DataController()
                 self.controllers_data[controller].set_data_types('light', 'temp')
         # Update the gui to show the connected devices
+        if not self.thread.is_alive():
+            self.thread.start()
+        # start the thread if not already running
         device_number = 0
         _translate = QtCore.QCoreApplication.translate
         self.setArduinotextEmtpy(_translate)
@@ -450,20 +464,22 @@ class Ui_MainWindow(object):
         self.arduino5.setStyleSheet("")
 
     def updateData(self):
-        data = self.serial_controller.read_ports()
-        for data_block in data:
-            if self.controllers_data[data_block[0]] is not None:
-                if data_block[1] == SensorType.LIGHT.value:
-                    self.controllers_data[data_block[0]].update(data_type='light', data=data_block[2])
-                elif data_block[1] == SensorType.TEMP.value:
-                    if data_block[2] < 60:
-                        self.controllers_data[data_block[0]].update(data_type='temp', data=data_block[2])
+        while self.exit is not True:
+            data = self.serial_controller.read_ports()
+            if data is not None:
+                for data_block in data:
+                    if self.controllers_data[data_block[0]] is not None:
+                        if data_block[1] == SensorType.LIGHT.value:
+                            self.controllers_data[data_block[0]].update(data_type='light', data=data_block[2])
+                        elif data_block[1] == SensorType.TEMP.value:
+                            if data_block[2] < 60:
+                                self.controllers_data[data_block[0]].update(data_type='temp', data=data_block[2])
 
     def updateGraph(self, graph, data):
         graph.setData(data)
 
     def updateGraph1(self):
-        print(self.controllers_data[self.controllers[0]].getData('temp'))  # for debugging purposes
+        # print(self.controllers_data[self.controllers[0]].getData('temp'))  # for debugging purposes
         # self.updateGraph(self.light_plot, [1,2,3,4,5])   # for debugging purposes
         self.updateGraph(self.light_plot, self.controllers_data[self.controllers[0]].getData('light'))  # update light graph
         self.updateGraph(self.temp_plot, self.controllers_data[self.controllers[0]].getData('temp'))  # update temperature graph
@@ -483,15 +499,15 @@ class Ui_MainWindow(object):
                 self.graphTimer.timeout.connect(self.updateGraph1)
                 self.graphTimer.start(1000)
                 self.setArduinoStyleSheet()
-                self.arduino1.setStyleSheet("background-color: rgb(142, 182, 255)")  # color the button
+                self.arduino1.setStyleSheet("background-color: rgb(182, 187, 235)")  # color the button
 
         except Exception as e:
             self.selected_controller = None
             pass
 
     def updateGraph2(self):
-        self.updateGraph(graphicsView, self.controllers_data[self.controllers[1]].getData('light'))  # update light graph
-        self.updateGraph(graphicsView_2, self.controllers_data[self.controllers[1]].getData('temp'))  # update temperature graph
+        self.updateGraph(self.light_plot, self.controllers_data[self.controllers[1]].getData('light'))  # update light graph
+        self.updateGraph(self.temp_plot, self.controllers_data[self.controllers[1]].getData('temp'))  # update temperature graph
 
     def selectArduino2(self):
         try:
@@ -500,14 +516,14 @@ class Ui_MainWindow(object):
             self.graphTimer.timeout.connect(self.updateGraph2)
             self.graphTimer.start(1000)
             self.setArduinoStyleSheet()
-            self.arduino2.setStyleSheet("background-color: rgb(142, 182, 255)")  # color the button
+            self.arduino2.setStyleSheet("background-color: rgb(182, 187, 235)")  # color the button
         except Exception as e:
             self.selected_controller = None
             pass
 
     def updateGraph3(self):
-        self.updateGraph(graphicsView, self.controllers_data[self.controllers[2]].getData('light'))  # update light graph
-        self.updateGraph(graphicsView_2, self.controllers_data[self.controllers[2]].getData('temp'))  # update temperature graph
+        self.updateGraph(self.light_plot, self.controllers_data[self.controllers[2]].getData('light'))  # update light graph
+        self.updateGraph(self.temp_plot, self.controllers_data[self.controllers[2]].getData('temp'))  # update temperature graph
 
     def selectArduino3(self):
         try:
@@ -516,14 +532,14 @@ class Ui_MainWindow(object):
             self.graphTimer.timeout.connect(self.updateGraph3)
             self.graphTimer.start(1000)
             self.setArduinoStyleSheet()
-            self.arduino3.setStyleSheet("background-color: rgb(142, 182, 255)")  # color the button
+            self.arduino3.setStyleSheet("background-color: rgb(182, 187, 235)")  # color the button
         except Exception as e:
             self.selected_controller = None
             pass
 
     def updateGraph4(self):
-        self.updateGraph(graphicsView, self.controllers_data[self.controllers[3]].getData('light'))  # update light graph
-        self.updateGraph(graphicsView_2, self.controllers_data[self.controllers[3]].getData('temp'))  # update temperature graph
+        self.updateGraph(self.light_plot, self.controllers_data[self.controllers[3]].getData('light'))  # update light graph
+        self.updateGraph(self.temp_plot, self.controllers_data[self.controllers[3]].getData('temp'))  # update temperature graph
 
     def selectArduino4(self):
         try:
@@ -532,14 +548,14 @@ class Ui_MainWindow(object):
             self.graphTimer.timeout.connect(self.updateGraph4)
             self.graphTimer.start(1000)
             self.setArduinoStyleSheet()
-            self.arduino4.setStyleSheet("background-color: rgb(142, 182, 255)")  # color the button
+            self.arduino4.setStyleSheet("background-color: rgb(182, 187, 235)")  # color the button
         except Exception as e:
             self.selected_controller = None
             pass
 
     def updateGraph5(self):
-        self.updateGraph(graphicsView, self.controllers_data[self.controllers[4]].getData('light'))  # update light graph
-        self.updateGraph(graphicsView_2, self.controllers_data[self.controllers[4]].getData('temp'))  # update temperature graph
+        self.updateGraph(self.light_plot, self.controllers_data[self.controllers[4]].getData('light'))  # update light graph
+        self.updateGraph(self.temp_plot, self.controllers_data[self.controllers[4]].getData('temp'))  # update temperature graph
 
     def selectArduino5(self):
         try:
@@ -551,10 +567,14 @@ class Ui_MainWindow(object):
             self.graphTimer.timeout.connect(self.updateGraph5)
             self.graphTimer.start(1000)
             self.setArduinoStyleSheet()
-            self.arduino5.setStyleSheet("background-color: rgb(142, 182, 255)")  # color the button
+            self.arduino5.setStyleSheet("background-color: rgb(182, 187, 235)")  # color the button
         except Exception as e:
             self.selected_controller = None
             pass
+
+    def stopThread(self):
+        print("Tried to stop the Thread")  # print for debugging purposes
+        self.exit = True
 
 
 if __name__ == "__main__":
