@@ -59,7 +59,8 @@ class SerialController:
 
     def send_command(self, com_port, command, content):
         self.__pause__()
-        if command is Command.MAX_ROL_IN or command is Command.MAX_ROL_OUT:
+        # print(com_port, ":", command, ":", content)  # for debugging purposes
+        if command == Command.MIN_ROL_OUT.value or command == Command.MAX_ROL_OUT.value:
             self.control_units[com_port].send(command, content >> 2)  # shift the value becaue content can vary 2 -> 400
         else:
             self.control_units[com_port].send(command, content)

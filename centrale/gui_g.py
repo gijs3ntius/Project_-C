@@ -8,7 +8,12 @@ from enums import Command, SensorType
 import time
 import atexit
 
+# TODO fix some minor bugs with disconnecting arduino's
+# TODO fix the 255 cm of the distance to 400
+# TODO fix the thread closing (optional)
+
 class Ui_MainWindow(object):
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(802, 472)
@@ -232,9 +237,9 @@ class Ui_MainWindow(object):
         self.gridLayout_2 = QtWidgets.QGridLayout()
         self.gridLayout_2.setObjectName("gridLayout_2")
         #####################################################################################################
-        self.scrrollup = QtWidgets.QPushButton(self.settings)
-        self.scrrollup.setObjectName("scrrollup")
-        self.gridLayout_2.addWidget(self.scrrollup, 1, 0, 1, 1)
+        self.scrollup = QtWidgets.QPushButton(self.settings)
+        self.scrollup.setObjectName("scrollup")
+        self.gridLayout_2.addWidget(self.scrollup, 1, 0, 1, 1)
         #####################################################################################################
         self.scrolldown = QtWidgets.QPushButton(self.settings)
         self.scrolldown.setObjectName("scrolldown")
@@ -377,6 +382,9 @@ class Ui_MainWindow(object):
         self.arduino3.clicked.connect(self.selectArduino3)
         self.arduino4.clicked.connect(self.selectArduino4)
         self.arduino5.clicked.connect(self.selectArduino5)
+        self.scrollup.clicked.connect(self.scrollUp)
+        self.scrolldown.clicked.connect(self.scrollDown)
+        self.submit.clicked.connect(self.submitSettings)
         #####################################################################################################
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -398,9 +406,10 @@ class Ui_MainWindow(object):
         self.label_9.setText(_translate("MainWindow", "Scroll out"))
         self.label_8.setText(_translate("MainWindow", "Temperature"))
         self.label_11.setText(_translate("MainWindow", "Distance"))
-        self.label_12.setText(_translate("MainWindow", "255 cm"))
+        # self.label_12.setText(_translate("MainWindow", "255 cm"))
+        self.label_12.setText("255 cm")
         self.label_14.setText(_translate("MainWindow", "Min"))
-        self.scrrollup.setText(_translate("MainWindow", "Scroll up"))
+        self.scrollup.setText(_translate("MainWindow", "Scroll up"))
         self.scrolldown.setText(_translate("MainWindow", "Scroll down"))
         self.lightcheck.setText(_translate("MainWindow", "Light"))
         self.tempcheck.setText(_translate("MainWindow", "Temperature"))
@@ -424,7 +433,7 @@ class Ui_MainWindow(object):
         for controller in self.controllers:
             if controller not in self.controllers_data.keys():
                 self.controllers_data[controller] = DataController()
-                self.controllers_data[controller].set_data_types('light', 'temp')
+                self.controllers_data[controller].set_data_types('light', 'temp', 'dist')
         # Update the gui to show the connected devices
         if not self.thread.is_alive():
             self.thread.start()
@@ -474,6 +483,8 @@ class Ui_MainWindow(object):
                         elif data_block[1] == SensorType.TEMP.value:
                             if data_block[2] < 60:
                                 self.controllers_data[data_block[0]].update(data_type='temp', data=data_block[2])
+                        elif data_block[1] == SensorType.DIST.value:
+                            self.controllers_data[data_block[0]].update(data_type='dist', data=data_block[2])
 
     def updateGraph(self, graph, data):
         graph.setData(data)
@@ -481,6 +492,7 @@ class Ui_MainWindow(object):
     def updateGraph1(self):
         # print(self.controllers_data[self.controllers[0]].getData('temp'))  # for debugging purposes
         # self.updateGraph(self.light_plot, [1,2,3,4,5])   # for debugging purposes
+        self.label_12.setText(str(self.controllers_data[self.controllers[0]].getData('dist')) + " cm")  # TODO check the distance data
         self.updateGraph(self.light_plot, self.controllers_data[self.controllers[0]].getData('light'))  # update light graph
         self.updateGraph(self.temp_plot, self.controllers_data[self.controllers[0]].getData('temp'))  # update temperature graph
 
@@ -571,6 +583,34 @@ class Ui_MainWindow(object):
         except Exception as e:
             self.selected_controller = None
             pass
+
+    def submitSettings(self):
+        if self.selected_controller is None:
+            return
+        commands = []  # list that contains all the commands to execute
+        if self.lightcheck.isChecked():
+            commands.append([Command.LIGHT_ROL_OUT.value, self.lightdown_slider.value()])  # append command and value
+            commands.append([Command.LIGHT_ROL_IN.value, self.lightup_slider.value()])
+        if self.tempcheck.isChecked():
+            commands.append([Command.TEMP_ROL_IN.value, self.tempscroll_up.value()])
+            commands.append([Command.TEMP_ROL_OUT.value, self.tempscroll_down.value()])
+        if self.scrolloutcheck.isChecked():
+            commands.append([Command.MAX_ROL_OUT.value, self.scrollout_max.value()])
+            commands.append([Command.MIN_ROL_OUT.value, self.scrollout_min.value()])
+        for command in commands:
+            self.serial_controller.send_command(self.selected_controller, command[0], command[1])  # send all the commands selected
+            time.sleep(100)  # sleep for 100 millisec to give the device time to proces the commands
+
+
+    def scrollUp(self):
+        if self.selected_controller is None:
+            return
+        self.serial_controller.send_command(self.selected_controller, Command.ROL_IN.value, content=0)  # content is not important in this command
+
+    def scrollDown(self):
+        if self.selected_controller is None:
+            return
+        self.serial_controller.send_command(self.selected_controller, Command.ROL_OUT.value, content=0)  # content is not important in this command
 
     def stopThread(self):
         print("Tried to stop the Thread")  # print for debugging purposes
