@@ -3,7 +3,7 @@
  *
  * Created: 27-10-2017 14:10:58
  * Author : Gijs
- */ 
+ */
 
 
 #include <avr/io.h>
@@ -20,7 +20,7 @@
 /* Struct that defines an arduino interface                             */
 /************************************************************************/
 
-//struct arduino  
+//struct arduino
 //{
 //	int ID;
 //} besturings_eenheid;
@@ -53,7 +53,7 @@
 //}
 
 //int getConnected(int ID*) {
-//	
+//
 //}
 
 /************************************************************************/
@@ -62,34 +62,19 @@
 
 // Get data from arduino
 //int getData() {
-	
+
 //}
 
 // sent data from arduino via serial
 //int sentData() {
-	
+
 //}
 
 /************************************************************************/
 /* Functions for the commands and the handling of the commands          */
 /************************************************************************/
 
-// first 3 bits are the command, 
-// first frame received is the command frame
-int getCommand(uint8_t input) {
-	int number = input & 0x07; // mask the last 3 bits these are
-	switch (number)
-	{
-		case 0x00: return 1;
-		case 0x01: return 2;
-		case 0x02: return 3;
-		case 0x03: return 4;
-		case 0x04: return 5;
-		case 0x05: return 6;
-		case 0x06: return 7;
-		case 0x07: return 8;
-	}
-}
+
 
 /************************************************************************/
 /* Functions to read data from the serial connection                    */
@@ -109,7 +94,7 @@ void initSerial() {
 
 uint8_t receiveSerial() {
 	// wait for data to be received
-	
+
 	while ( !(UCSR0A & (1 << RXC0)) );
 	// get and return received data from buffer
 	return UDR0;
@@ -125,55 +110,55 @@ void transmitSerial(uint8_t data) {
 
 void serialReactor(){
 	uint8_t command;
-	uint8_t  data; 
-	
+	uint8_t  data;
+
 	command = receiveSerial();
 	data = receiveSerial();
-	
+
 	command &= 0b00001111;
-	
+
 	if(command <= 8 && command != 0){
-		
+
 		if (command == 0){
 			setArduinoID(data);
 		}
-		
+
 		if (command == 1){
 			rolledInOrOut(command, getMaxRoll());
 			_delay_ms(1000);
 		}
-		
+
 		if (command == 2){
 			rolledInOrOut(command, getMinRoll());
 			_delay_ms(1000);
 		}
-		
+
 		if (command == 3){
 			setMaxRoll(data);
 		}
-		
+
 		if (command == 4){
 			setMinRoll(data);
 		}
-		
+
 		if (command == 5){
 			setMinTemp(data);
 		}
-		
+
 		if (command == 6){
 			setMaxTemp(data);
 		}
-		
+
 		if (command == 7){
 			setMinLight(data);
 		}
-		
+
 		if (command == 8){
 			setMaxLight(data);
 		}
 	}
 
 	_delay_ms(20);
-	
+
 
 }
