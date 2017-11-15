@@ -1,10 +1,3 @@
-library.componentinfo.xml
-library.cproj
-BesturingsEenheid.componentinfo.xml
-BesturingsEenheid.cproj
-.vs/*
 *.xml
 *.cproj
-*.cppproj
-BesturingsEenheid.cppproj
-*.atsln
+.vs/**

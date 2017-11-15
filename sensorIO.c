@@ -11,70 +11,33 @@
  */ 
 
 #include "pinIO.h"
+#include <avr/io.h>
 #include <util/delay.h>
+#include <avr/interrupt.h>
+//#inculde distance_sensor
 
-const int trigPin = 9;
-const int echoPin = 10;
+#define redLight 11
+#define greenLight 12
+#define yellowLight 13
 
-const int light;
+#define HIGH 1
+#define LOW 0
+#define IN 0
+#define OUT 1
 
-long duration;
-int distance;
+uint8_t rolledOut = 0;
 
-
-/* Ultrasenoorsensor */
-void setUpUltra(){
-	trigPin = digital_config(9, OUT); // trigger pin wordt output
-	echoPin = digital_config(10, IN); // echo pin is input
-}
-
-void startPulse(){
-	trigPin = digital_write(LOW); // zorg ervoor dat trigger leeg is!
-	_delay_ms(2);
-	
-	trigPin = digital_write(HIGH);
-	_delay_ms(10);
-	trigPin = digital_write(LOW);
-	
-}
-
-long readPulse(){
-	duration = digital_read(echoPin);
-	return duration;
-}
-
-int distance(duration){
-	distance = (duration * 0.034) / 2;
-	return distance;
-}
-
-
-/* dit is een soort van de main functie. Hierdoor krijg je de juiste afstand terug. Dit in scheduler gooien */
-int getDistance(){
-	
-	setUpUltra();
-	
-	startPulse();
-	distance = distance(readPulse());
-	
-	return distance;
-	
-}
 
 /* Temperatuursensor
-* verander het 10 bits getal in het voltage */
-float voltage(analog){
-	float voltage = analog * 5.0 / 1024;
-	// keer 5.0 omdat het om 5 volt gaat en gedeelt door 1024 omdat het een 10 bits getal is
-	// voorbeeld: 2.5 volt = 512 * 5.0 / 1024. Je krijgt 512(0x200) binnen
-	return voltage;
-	
-}
-
+* verander het 10 bits getal in het voltage 
+***************************************************************************************************************/
 
 /* Deze functie zorgt ervoor dat de gemeten voltage omgezet wordt naar temperatuur */
-float temperatureInC(voltage){
-	float temperatureC = (voltage - 0.5) * 100;
+float temperatureInC(uint16_t analog){
+	float volt = analog * 5.0 / 1024;
+	// keer 5.0 omdat het om 5 volt gaat en gedeelt door 1024 omdat het een 10 bits getal is
+	// voorbeeld: 2.5 volt = 512 * 5.0 / 1024. Je krijgt 512(0x200) binnen
+	float temperatureC = (volt - 0.5) * 100;
 	// de formule die ervoor zorgt dat het omgezet wordt.
 	// voorbeeld: (1.2 - 0.5) * 100 = 70 graden Celsius.
 	return temperatureC;
@@ -82,24 +45,84 @@ float temperatureInC(voltage){
 }
 
 
-float measure_Temp(){
-	float tempInC = temperatureInC(voltage(analog_read(0))); // lees ADC uit (A0) en maak er volt van en dan Celsius
+uint8_t getTemp(int pin){
+	uint8_t tempInC = temperatureInC(analog_read(pin)); // lees ADC uit (A0) en maak er volt van en dan Celsius
 	return tempInC;
-
 }
 
 
-int getTemp() {
-	int temperature;
-	temperature= measure_Temp(); // roep de functie aan die temperatuur uitleest
-	return temperature;
-}
+/* Photocell sensor 
+*********************************************************************************************************************/
 
 
-/* Photocell sensor */
-int getLight(){
-	light = analog_read(1); // lees A1 uit // deze functie nog uit Gijs zijn library halen
+uint8_t getLight(int pin){
+	uint8_t light = (analog_read(pin) >> 2); 
+	// lees A1 uit, met een shift /4 
+	// Je krijgt een 10 bits getal. We schuiven hem twee keer naar rechts zodat je 8 bits hebt.
+	// Je verliest hier alleen de waarden 0-3 mee. Voor dit project niet erg.
 	return light;
 }
 
+/* Uit en inrol lampjes
+*******************************************************************************************************************/
+
+
+void setUpLeds(){
+	digital_config(redLight, OUT);
+	digital_config(greenLight, OUT);
+	digital_config(yellowLight, OUT);
+}
+
+
+
+void rolledInOrOut(uint8_t command, uint8_t maxOut){
+	uint8_t i = 0;
+	
+	if (rolledOut == 0 && command == 2)
+	{
+		rolledOut = 1;
+		digital_write(redLight, LOW);
+		digital_write(greenLight, HIGH);
+		digital_write(yellowLight, LOW);
+		
+		for (i = 0; i < maxOut; i++)
+		{
+			digital_write(yellowLight, HIGH);
+			_delay_ms(5000);
+			digital_write(yellowLight, LOW);
+			_delay_ms(5000);
+		}
+	}
+	
+	if (rolledOut == 1 && command == 1)
+	{
+		rolledOut = 0;
+		digital_write(greenLight, LOW);
+		digital_write(redLight, HIGH);
+		digital_write(yellowLight, LOW);
+		
+		for (i = 0; i < maxOut; i++){
+			digital_write(yellowLight, HIGH);
+			_delay_ms(5000);
+			digital_write(yellowLight, LOW);
+			_delay_ms(5000);	
+		}
+	}
+}
+
+/*Deze functie is er puur voor een simulatie. Om te testen */
+void turnOnLights(){
+	
+	rolledInOrOut(1, 10);
+	_delay_ms(10000);
+	rolledInOrOut(2, 10);
+	
+}
+
+
+void resetLights(){
+	digital_write(redLight, LOW);
+	digital_write(greenLight, LOW);
+	digital_write(yellowLight, LOW);
+}
 
