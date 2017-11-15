@@ -488,7 +488,7 @@ class Ui_MainWindow(object):
                             if data_block[2] < 60:
                                 self.controllers_data[data_block[0]].update(data_type='temp', data=data_block[2])
                         elif data_block[1] == SensorType.DIST.value:
-                            self.label_12.setText(str(data_block[2] + " cm"))
+                            self.label_12.setText(str(data_block[2]) + " cm")
                             self.controllers_data[data_block[0]].update(data_type='dist', data=data_block[2])
 
     def updateGraph(self, graph, data):
