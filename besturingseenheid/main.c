@@ -63,9 +63,9 @@ void rolledInOrOut(uint8_t command, uint8_t maxOut){
 		for (i = 0; i < 10; i++)
 		{
 			digital_write(yellowLight, HIGH);
-			_delay_ms(5000);
+			_delay_ms(500);
 			digital_write(yellowLight, LOW);
-			_delay_ms(5000);
+			_delay_ms(500);
 		}
 		return;
 	}	
@@ -76,9 +76,9 @@ void rolledInOrOut(uint8_t command, uint8_t maxOut){
 		digital_write(yellowLight, LOW);
 		for (i = 0; i < 10; i++){
 			digital_write(yellowLight, HIGH);
-			_delay_ms(5000);
+			_delay_ms(500);
 			digital_write(yellowLight, LOW);
-			_delay_ms(5000);
+			_delay_ms(500);
 		}
 		return;
 	}
@@ -106,20 +106,18 @@ int main(void)
 {
 	initSerial();
 	analog_config();
-	//setup eeprom and standard settings
-	
+	setDefaultValues();
 	setUpLeds();
 	_delay_ms(1000);
 	SCH_Init_T1();
 	SCH_Add_Task(Temperature, 100, 400);
 	SCH_Add_Task(Light, 200, 400);
 	SCH_Add_Task(Distance, 60, 120);
-	SCH_Add_Task(settingsChecker, 20, 40);
+	SCH_Add_Task(settingsChecker, 50, 100);
 	//SCH_Add_Task(serialReactor, 10, 20);
 	SCH_Start();// start de scheduler
     while (1)
     {
 		SCH_Dispatch_Tasks(); // verzend de taken
 	}
-
 }

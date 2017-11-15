@@ -86,6 +86,6 @@ void setDefaultValues(){
 	setMinRoll(2);
 	setMaxTemp(25);
 	setMinTemp(10);
-	setMaxLight(255);
-	setMinLight(1);
+	setMaxLight(200);
+	setMinLight(100);
 }
