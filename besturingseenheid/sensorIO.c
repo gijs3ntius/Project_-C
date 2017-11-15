@@ -25,8 +25,6 @@
 #define IN 0
 #define OUT 1
 
-uint8_t rolledOut = 0;
-
 
 /* Temperatuursensor
 * verander het 10 bits getal in het voltage 
@@ -44,7 +42,6 @@ float temperatureInC(uint16_t analog){
 	
 }
 
-
 uint8_t getTemp(int pin){
 	uint8_t tempInC = temperatureInC(analog_read(pin)); // lees ADC uit (A0) en maak er volt van en dan Celsius
 	return tempInC;
@@ -54,7 +51,6 @@ uint8_t getTemp(int pin){
 /* Photocell sensor 
 *********************************************************************************************************************/
 
-
 uint8_t getLight(int pin){
 	uint8_t light = (analog_read(pin) >> 2); 
 	// lees A1 uit, met een shift /4 
@@ -63,65 +59,18 @@ uint8_t getLight(int pin){
 	return light;
 }
 
-/* Uit en inrol lampjes
-*******************************************************************************************************************/
-
-
-void setUpLeds(){
+void setUpLights(){
 	digital_config(redLight, OUT);
 	digital_config(greenLight, OUT);
 	digital_config(yellowLight, OUT);
 }
 
-
-
-void rolledInOrOut(uint8_t command, uint8_t maxOut){
-	uint8_t i = 0;
-	
-	if (rolledOut == 0 && command == 2)
-	{
-		rolledOut = 1;
-		digital_write(redLight, LOW);
-		digital_write(greenLight, HIGH);
-		digital_write(yellowLight, LOW);
-		
-		for (i = 0; i < 10; i++)
-		{
-			digital_write(yellowLight, HIGH);
-			_delay_ms(5000);
-			digital_write(yellowLight, LOW);
-			_delay_ms(5000);
-		}
-		return;
-	}
-	
-	if (rolledOut == 1 && command == 1)
-	{
-		rolledOut = 0;
-		digital_write(greenLight, LOW);
-		digital_write(redLight, HIGH);
-		digital_write(yellowLight, LOW);
-		
-		for (i = 0; i < 10; i++){
-			digital_write(yellowLight, HIGH);
-			_delay_ms(5000);
-			digital_write(yellowLight, LOW);
-			_delay_ms(5000);	
-		}
-		return;
-	}
-	return;
-}
-
 /*Deze functie is er puur voor een simulatie. Om te testen */
 void turnOnLights(){
-	
-	rolledInOrOut(1, 10);
+	rolledInOrOut(1);
 	_delay_ms(10000);
-	rolledInOrOut(2, 10);
-	
+	rolledInOrOut(2);
 }
-
 
 void resetLights(){
 	digital_write(redLight, LOW);
