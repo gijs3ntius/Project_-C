@@ -74,8 +74,6 @@ void analog_config() {
 	ADMUX = 0x00; // reset ADC
 	ADMUX |= (1<<REFS0); // sets reference voltage
 	ADCSRA |= (1<<ADEN)|(1<<ADPS0)|(1<<ADPS1)|(1<<ADPS2); // enable ADC, select ADC prescaler with ADPS
-	transmitSerial(0b11110000);
-	transmitSerial(ADCSRA);
 }
 
 /*
