@@ -9,7 +9,6 @@ import time
 import atexit
 
 # TODO fix some minor bugs with disconnecting arduino's
-# TODO fix the 255 cm of the distance to 400
 # TODO fix the thread closing (optional)
 
 class Ui_MainWindow(object):
@@ -33,6 +32,7 @@ class Ui_MainWindow(object):
         # timers & threads
         self.graphTimer = QtCore.QTimer()
         self.exit = False
+        self.started = False
         atexit.register(self.stopThread)  # register the stopThread funtion to get out of the infinite loop
         self.thread = Thread(target=self.updateData)  # Start a thread to read data
         self.command_thread = Thread(target=self.submitSettings_flow)  # build a thread to execute the commands
@@ -489,18 +489,18 @@ class Ui_MainWindow(object):
                             if data_block[2] < 60:
                                 self.controllers_data[data_block[0]].update(data_type='temp', data=data_block[2])
                         elif data_block[1] == SensorType.DIST.value:
-                            self.label_12.setText(str(data_block[2]) + " cm")
                             self.controllers_data[data_block[0]].update(data_type='dist', data=data_block[2])
 
     def updateGraph(self, graph, data):
         graph.setData(data)
 
     def updateGraph1(self):
-        # print(self.controllers_data[self.controllers[0]].getData('temp'))  # for debugging purposes
-        # self.updateGraph(self.light_plot, [1,2,3,4,5])   # for debugging purposes
-        # self.label_12.setText(str(self.controllers_data[self.controllers[0]].getData('dist')) + " cm")  # TODO check the distance data
-        self.updateGraph(self.light_plot, self.controllers_data[self.controllers[0]].getData('light'))  # update light graph
-        self.updateGraph(self.temp_plot, self.controllers_data[self.controllers[0]].getData('temp'))  # update temperature graph
+        try:
+            self.label_12.setText(str(self.controllers_data[self.controllers[0]].getData('dist')[-1]) + " cm")
+            self.updateGraph(self.light_plot, self.controllers_data[self.controllers[0]].getData('light'))  # update light graph
+            self.updateGraph(self.temp_plot, self.controllers_data[self.controllers[0]].getData('temp'))  # update temperature graph
+        except Exception as e:
+            pass
 
     def doNothing(self):
         pass
@@ -593,9 +593,13 @@ class Ui_MainWindow(object):
     def submitSettings(self):
         if self.selected_controller is None:
             return
-        # check if settings thread is finished to start a new thread
+        if self.started is True:
+            self.startSettingsThread()
+            self.command_thread = Thread(target=self.submitSettings_flow)
+            self.command_thread.start()
         if not self.command_thread.is_alive():
             self.command_thread.start()
+            self.startSettingsThread()
 
     def submitSettings_flow(self):
         commands = []  # list that contains all the commands to execute
@@ -625,8 +629,11 @@ class Ui_MainWindow(object):
     def quit_application(self):
         self.stopThread()
 
+    def startSettingsThread(self):
+        self.started = True
+
     def stopThread(self):
-        # print("Tried to stop the Thread")  # print for debugging purposes
+        print("Tried to stop the Thread")  # print for debugging purposes
         self.exit = True
 
 
