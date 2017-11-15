@@ -45,13 +45,8 @@ float temperatureInC(uint16_t analog){
 }
 
 
-<<<<<<< HEAD
-uint8_t getTemp(){
-	uint8_t tempInC = temperatureInC(analog_read(0)); // lees ADC uit (A0) en maak er volt van en dan Celsius
-=======
 uint8_t getTemp(int pin){
 	uint8_t tempInC = temperatureInC(analog_read(pin)); // lees ADC uit (A0) en maak er volt van en dan Celsius
->>>>>>> development
 	return tempInC;
 }
 
@@ -60,13 +55,8 @@ uint8_t getTemp(int pin){
 *********************************************************************************************************************/
 
 
-<<<<<<< HEAD
-uint8_t getLight(){
-	uint8_t light = (analog_read(1)>>2); 
-=======
 uint8_t getLight(int pin){
 	uint8_t light = (analog_read(pin) >> 2); 
->>>>>>> development
 	// lees A1 uit, met een shift /4 
 	// Je krijgt een 10 bits getal. We schuiven hem twee keer naar rechts zodat je 8 bits hebt.
 	// Je verliest hier alleen de waarden 0-3 mee. Voor dit project niet erg.
@@ -95,13 +85,14 @@ void rolledInOrOut(uint8_t command, uint8_t maxOut){
 		digital_write(greenLight, HIGH);
 		digital_write(yellowLight, LOW);
 		
-		for (i = 0; i < maxOut; i++)
+		for (i = 0; i < 10; i++)
 		{
 			digital_write(yellowLight, HIGH);
 			_delay_ms(5000);
 			digital_write(yellowLight, LOW);
 			_delay_ms(5000);
 		}
+		return;
 	}
 	
 	if (rolledOut == 1 && command == 1)
@@ -111,13 +102,15 @@ void rolledInOrOut(uint8_t command, uint8_t maxOut){
 		digital_write(redLight, HIGH);
 		digital_write(yellowLight, LOW);
 		
-		for (i = 0; i < maxOut; i++){
+		for (i = 0; i < 10; i++){
 			digital_write(yellowLight, HIGH);
 			_delay_ms(5000);
 			digital_write(yellowLight, LOW);
 			_delay_ms(5000);	
 		}
+		return;
 	}
+	return;
 }
 
 /*Deze functie is er puur voor een simulatie. Om te testen */
