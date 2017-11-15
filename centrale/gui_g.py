@@ -479,6 +479,7 @@ class Ui_MainWindow(object):
     def updateData(self):
         while self.exit is not True:
             data = self.serial_controller.read_ports()
+            print(data)
             if data is not None:
                 for data_block in data:
                     if self.controllers_data[data_block[0]] is not None:
@@ -592,6 +593,7 @@ class Ui_MainWindow(object):
     def submitSettings(self):
         if self.selected_controller is None:
             return
+        # check if settings thread is finished to start a new thread
         if not self.command_thread.is_alive():
             self.command_thread.start()
 
