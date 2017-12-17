@@ -5,9 +5,6 @@
 * ID van de ardiuno wordt altijd op adres 0x00 opgeslagen
 *
 */
-
-
-
 #include <avr/eeprom.h>
 #include <stdlib.h>
 
@@ -20,7 +17,6 @@ const minTemp_address = 0x04;
 const maxLight_address = 0x05;
 const minLight_address = 0x06;
 
-
 void setArduinoID(uint8_t userinput){
 	eeprom_read_byte(ID_address);
 }
@@ -30,7 +26,6 @@ uint8_t getArduinoID(){
 	return ardID;
 }
 
-
 void setMaxRoll(uint8_t userInput){
 	eeprom_write_byte(maxRoll_address, userInput);
 }
@@ -39,7 +34,6 @@ uint8_t getMaxRoll(){
 	uint8_t maxRoll = eeprom_read_byte(maxRoll_address);
 	return maxRoll;
 }
-
 
 void setMinRoll(uint8_t userInput){
 	eeprom_write_byte(minRoll_address, userInput);
@@ -87,13 +81,11 @@ uint8_t getMinLight(){
 	return minLight;
 }
 
-
-
 void setDefaultValues(){
 	setMaxRoll(200);
 	setMinRoll(2);
 	setMaxTemp(25);
 	setMinTemp(10);
-	setMaxLight(255);
-	setMinLight(1);
+	setMaxLight(200);
+	setMinLight(100);
 }

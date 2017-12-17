@@ -1,10 +1,3 @@
-/*
- * CFile1.c
- *
- * Created: 10-10-2017 19:28:18
- *  Author: Gijs
- */
-
 #include <avr/io.h>
 #include <stdio.h>
 
@@ -44,7 +37,6 @@ void digital_write(int pin, int value) {
 		} else {
 			PORTD = PORTD | (1 << pin);
 		}
-
 	} else {
 		if(value == 0) {
 			PORTB = PORTB & ~(1 << (pin%8));
@@ -59,8 +51,7 @@ void digital_write(int pin, int value) {
  * Gets a value from a digital pin 1 or 0
  */
 int digital_read(int pin) {
-	if (pin < 8)
-	{
+	if (pin < 8) {
 		return (PIND & (1 << (pin%8)));
 	} else {
 		return (PINB & (1 << (pin%8)));
@@ -74,8 +65,6 @@ void analog_config() {
 	ADMUX = 0x00; // reset ADC
 	ADMUX |= (1<<REFS0); // sets reference voltage
 	ADCSRA |= (1<<ADEN)|(1<<ADPS0)|(1<<ADPS1)|(1<<ADPS2); // enable ADC, select ADC prescaler with ADPS
-	transmitSerial(0b11110000);
-	transmitSerial(ADCSRA);
 }
 
 /*
@@ -83,8 +72,6 @@ void analog_config() {
  */
 uint16_t analog_read(uint8_t adcx) {
 	ADMUX = (ADMUX & 0xF8) | (adcx & 0x07); // mask the last three bits from admux
-	//transmitSerial(0b11110000);
-	//transmitSerial(ADMUX);
 	ADCSRA |= (1<<ADSC); // analog read is started
 	loop_until_bit_is_set(ADCSRA, ADSC);
 	return (ADC); //return adc
